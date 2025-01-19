@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import ClientLayout from "./client-layout";
+import GlowEffect from "../components/GlowEffect";  
+// Removed the import statement for ClientLayout due to the error
+import HologramBackground from "../components/HologramBackground";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -25,10 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased glow-container relative min-h-screen`}>
+        <ClientLayout>
+          <HologramBackground />
+          <GlowEffect />
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
