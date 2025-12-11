@@ -36,8 +36,8 @@ const ContentWrapper = styled(motion.div)`
   position: relative;
 
   @media (max-width: 900px) {
-    flex-direction: column-reverse; /* Stack with text on top/bottom as preferred */
-    gap: 2rem;
+    flex-direction: column-reverse;
+    gap: 3rem;
   }
 `;
 
@@ -131,6 +131,11 @@ const AvatarContainer = styled.div`
   width: 100%;
   position: relative;
 
+  @media (max-width: 768px) {
+    height: 300px;
+    order: -1; /* Show avatar above text on mobile if flexibility allows, or just size adjustment */
+  }
+
   /* Hologram Effect Container */
   &::after {
     content: "";
@@ -177,6 +182,119 @@ function ParticleCloud() {
   );
 }
 
+// --- Scramble Text Component ---
+const ScrambleText = ({
+  text,
+  speed = 50,
+  delay = 0,
+  reveal = false, // If true, reveal immediately
+  hoverResult = "", // If set, text changes to this on hover
+  className,
+}: {
+  text: string;
+  speed?: number;
+  delay?: number;
+  reveal?: boolean;
+  hoverResult?: string;
+  className?: string;
+}) => {
+  const [display, setDisplay] = React.useState(text);
+  const [isHovering, setIsHovering] = React.useState(false);
+  const chars = "!<>-_\\/[]{}—=+*^?#________";
+
+  React.useEffect(() => {
+    let interval: any;
+    let timer: any;
+
+    // Target text depends on hover state
+    const target = isHovering && hoverResult ? hoverResult : text;
+
+    const startScramble = () => {
+      let iteration = 0;
+      clearInterval(interval);
+
+      interval = setInterval(() => {
+        setDisplay(
+          target
+            .split("")
+            .map((char, index) => {
+              if (index < iteration) {
+                return target[index];
+              }
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join("")
+        );
+
+        if (iteration >= target.length) {
+          clearInterval(interval);
+        }
+
+        iteration += 1 / 3;
+      }, 30);
+    };
+
+    if (reveal || isHovering) {
+      timer = setTimeout(startScramble, delay);
+    } else {
+      // If not revealing, just show static (or could be scrambled initial state)
+      // For this usage, we assume we want to show it eventually or on hover
+      setDisplay(target);
+    }
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
+  }, [reveal, isHovering, hoverResult, text, delay]);
+
+  return (
+    <span
+      className={className}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      {display}
+    </span>
+  );
+};
+
+// --- New Styled Components for Fun Section ---
+const FunFactBox = styled(motion.div)`
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border: 1px dashed ${colors.neonCyan};
+  background: rgba(0, 243, 255, 0.05);
+  position: relative;
+  cursor: help;
+  overflow: hidden;
+
+  &::before {
+    content: "CLASSIFIED_INFO // HOVER_TO_DECRYPT";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.6rem;
+    color: ${colors.neonPurple};
+    opacity: 0.7;
+  }
+
+  &:hover {
+    background: rgba(0, 243, 255, 0.1);
+    border-style: solid;
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+  }
+`;
+
+const FunFactTitle = styled.h4`
+  color: ${colors.neonGreen};
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
 const GetToKnowMe = () => {
   return (
     <Section id="about">
@@ -187,15 +305,24 @@ const GetToKnowMe = () => {
         transition={{ duration: 0.8 }}
       >
         <TextContainer>
-          <GlitchHeader>Neural Link_Established</GlitchHeader>
+          <GlitchHeader>
+            <ScrambleText text="Neural Link_Established" reveal delay={100} />
+          </GlitchHeader>
+
           <TerminalText>
-            Initializing bio-data scan... Subject identified as Yulia Rizki.
+            <ScrambleText
+              text="Initializing bio-data scan... Subject identified as Yulia Rizki."
+              reveal
+              delay={500}
+            />
             <br />
             <br />
-            Experienced Frontend Engineer specialized in building immersive web
-            interfaces. Currently upgrading neural pathways with Next.js,
-            Three.js, and GenAI technologies. My mission is to bridge the gap
-            between human intent and digital execution.
+            <span style={{ opacity: 0.9 }}>
+              Experienced Frontend Engineer specialized in building immersive
+              web interfaces. Currently upgrading neural pathways with Next.js,
+              Three.js, and GenAI technologies. My mission is to bridge the gap
+              between human intent and digital execution.
+            </span>
           </TerminalText>
 
           <StatsGrid>
@@ -204,18 +331,29 @@ const GetToKnowMe = () => {
               <ProgressBar width="95%" />
             </StatItem>
             <StatItem>
-              <StatLabel>UI / UX Engineering</StatLabel>
-              <ProgressBar width="88%" />
-            </StatItem>
-            <StatItem>
               <StatLabel>React / Next.js</StatLabel>
               <ProgressBar width="92%" />
             </StatItem>
-            <StatItem>
-              <StatLabel>Cyber-Security Awareness</StatLabel>
-              <ProgressBar width="75%" />
-            </StatItem>
           </StatsGrid>
+
+          <FunFactBox
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+          >
+            <FunFactTitle>
+              <span style={{ fontSize: "1.2rem" }}>⚡</span>
+              BONUS_DATA_PACK
+            </FunFactTitle>
+            <div style={{ color: "#ccc", fontSize: "0.95rem" }}>
+              <ScrambleText
+                text="Encrypting data... Hover to view."
+                hoverResult="Fun Fact: I can debug code in my sleep (literally) and I assume 90% of bugs are typos."
+                reveal={false}
+              />
+            </div>
+          </FunFactBox>
         </TextContainer>
 
         <AvatarContainer>

@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { colors, animations, cyberGrid } from "../styles/shared";
 
-
 const Section = styled.section`
   min-height: 100vh;
   position: relative;
@@ -34,137 +33,147 @@ const Section = styled.section`
     );
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+    padding: 4rem 1rem;
+  }
 `;
 
-const TerminalContainer = styled(motion.div)`
+const CyberFormContainer = styled(motion.div)`
   width: 100%;
-  max-width: 800px;
-  background: rgba(10, 10, 12, 0.9);
-  border: 1px solid ${colors.neonCyan};
-  box-shadow: 0 0 30px rgba(0, 243, 255, 0.1);
-  backdrop-filter: blur(10px);
-  position: relative;
+  max-width: 900px;
+  background: rgba(16, 20, 24, 0.6);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  /* Cyber Shape */
+  clip-path: polygon(
+    20px 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%,
+    0 20px
+  );
+  padding: 4rem;
   display: flex;
   flex-direction: column;
+  position: relative;
   z-index: 10;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 
-  /* Decorative Corners */
+  /* Decorative Corner Lines */
   &::before {
     content: "";
     position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 20px;
-    height: 20px;
-    border-top: 2px solid ${colors.neonCyan};
-    border-left: 2px solid ${colors.neonCyan};
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, ${colors.neonCyan} 2px, transparent 2px)
+        0 0 / 20px 20px no-repeat,
+      linear-gradient(${colors.neonCyan} 2px, transparent 2px) 0 0 / 20px 20px
+        no-repeat,
+      linear-gradient(90deg, ${colors.neonCyan} 2px, transparent 2px) 100% 100% /
+        20px 20px no-repeat,
+      linear-gradient(${colors.neonCyan} 2px, transparent 2px) 100% 100% / 20px
+        20px no-repeat;
+    pointer-events: none;
+    opacity: 0.5;
   }
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 20px;
-    height: 20px;
-    border-bottom: 2px solid ${colors.neonCyan};
-    border-right: 2px solid ${colors.neonCyan};
-  }
-`;
-
-const HeaderBar = styled.div`
-  height: 40px;
-  background: rgba(0, 243, 255, 0.1);
-  border-bottom: 1px solid ${colors.neonCyan};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
-  font-family: var(--font-share-tech-mono), monospace;
-  color: ${colors.neonCyan};
-  font-size: 0.8rem;
-  letter-spacing: 2px;
-`;
-
-const StatusBar = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-
-  span.status {
-    width: 8px;
-    height: 8px;
-    background: ${colors.neonGreen};
-    border-radius: 50%;
-    box-shadow: 0 0 5px ${colors.neonGreen};
-    animation: ${animations.flicker} 2s infinite;
-  }
-`;
-
-const ContentArea = styled.div`
-  padding: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    padding: 2rem;
+    clip-path: none;
+    border-radius: 12px;
   }
 `;
 
 const Title = styled.h2`
   font-family: var(--font-orbitron);
-  font-size: 2.5rem;
+  font-size: 3rem;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 2px 2px 0px ${colors.neonPurple};
-  margin: 0;
+  margin-bottom: 0.5rem;
+
+  /* Glitch Text Effect */
+  position: relative;
+  display: inline-block;
 
   span {
     color: ${colors.neonCyan};
+    text-shadow: 0 0 15px ${colors.neonCyan};
+  }
+`;
+
+const Subtitle = styled.p`
+  font-family: var(--font-share-tech-mono);
+  color: #888;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-bottom: 3rem;
+
+  &::before {
+    content: "> ";
+    color: ${colors.neonGreen};
   }
 `;
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
-const FormGroup = styled.div`
+const FormGroup = styled.div<{ $fullWidth?: boolean }>`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  grid-column: ${(props) => (props.$fullWidth ? "span 2" : "span 1")};
+
+  @media (max-width: 768px) {
+    grid-column: span 1;
+  }
 `;
 
 const Label = styled.label`
   font-family: var(--font-share-tech-mono);
   color: ${colors.neonCyan};
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   letter-spacing: 1px;
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background: ${colors.darkBg}; /* Mask line behind it */
+  padding: 0 5px;
+  z-index: 2;
 `;
 
 const Input = styled.input`
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
-  padding: 1rem;
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
   color: #fff;
   font-family: var(--font-share-tech-mono);
   font-size: 1rem;
   outline: none;
   transition: all 0.3s;
+  border-radius: 4px;
 
   &:focus {
     border-color: ${colors.neonCyan};
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
     background: rgba(0, 243, 255, 0.05);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
   }
 `;
 
 const TextArea = styled.textarea`
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid #333;
-  padding: 1rem;
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
   color: #fff;
   font-family: var(--font-share-tech-mono);
   font-size: 1rem;
@@ -172,170 +181,206 @@ const TextArea = styled.textarea`
   transition: all 0.3s;
   min-height: 150px;
   resize: vertical;
+  border-radius: 4px;
 
   &:focus {
     border-color: ${colors.neonCyan};
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
     background: rgba(0, 243, 255, 0.05);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
   }
 `;
 
 const SubmitBtn = styled(motion.button)`
-  background: transparent;
-  border: 1px solid ${colors.neonGreen};
-  color: ${colors.neonGreen};
-  padding: 1rem 2rem;
+  grid-column: span 2;
+  background: ${colors.neonCyan};
+  color: #000;
+  border: none;
+  padding: 1rem;
   font-family: var(--font-orbitron);
-  font-size: 1.1rem;
+  font-weight: bold;
+  font-size: 1.2rem;
   letter-spacing: 2px;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
+  clip-path: polygon(
+    10px 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%,
+    0 10px
+  );
+  transition: all 0.3s;
   margin-top: 1rem;
-  align-self: flex-start;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: ${colors.neonGreen};
-    transition: left 0.3s;
-    z-index: -1;
-  }
 
   &:hover {
-    color: #000;
-    box-shadow: 0 0 20px rgba(0, 255, 159, 0.4);
+    background: #fff;
+    color: ${colors.neonCyan};
+    box-shadow: 0 0 20px ${colors.neonCyan}, 0 0 40px ${colors.neonCyan};
+  }
 
-    &::before {
-      left: 0;
-    }
+  @media (max-width: 768px) {
+    grid-column: span 1;
   }
 `;
 
 const MessageStatus = styled(motion.div)`
   margin-top: 1rem;
-  padding: 1rem;
+  padding: 2rem;
   border: 1px solid ${colors.neonGreen};
-  background: rgba(0, 255, 159, 0.1);
+  background: rgba(0, 255, 159, 0.05);
   color: ${colors.neonGreen};
   font-family: var(--font-share-tech-mono);
   text-align: center;
+  width: 100%;
+
+  h3 {
+    font-family: var(--font-orbitron);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
 `;
 
 const Contact = () => {
   const [formState, setFormState] = useState<"idle" | "sending" | "sent">(
     "idle"
   );
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState("sending");
-    // Simulate network request
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setFormState("sent");
+
+    try {
+      const response = await fetch(
+        "https://formsubmit.co/ajax/kikiyulia223@gmail.com",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            _subject: `New Portfolio Message from ${formData.name}`,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setFormState("sent");
+      } else {
+        alert("Transmission failed. Please try again.");
+        setFormState("idle");
+      }
+    } catch (error) {
+      alert("Transmission error.");
+      setFormState("idle");
+    }
   };
 
   return (
     <Section id="contact">
-      <TerminalContainer
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
+      <CyberFormContainer
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6 }}
       >
-        <HeaderBar>
-          <span>NEURAL_UPLINK_V.2.4</span>
-          <StatusBar>
-            <span>STATUS: ONLINE</span>
-            <span className="status"></span>
-          </StatusBar>
-        </HeaderBar>
+        <Title>
+          Initialize <span>Uplink</span>
+        </Title>
+        <Subtitle>Establish secure connection...</Subtitle>
 
-        <ContentArea>
-          <Title>
-            Initialize <span>Connection</span>
-          </Title>
-          <p
-            style={{
-              fontFamily: "var(--font-share-tech-mono)",
-              color: "#a0a0a0",
-            }}
+        {formState === "sent" ? (
+          <MessageStatus
+            initial={{ opacity: 0, zoom: 0.9 }}
+            animate={{ opacity: 1, zoom: 1 }}
           >
-            Transmit your signal. Encryption enabled.
-          </p>
-
-          {formState === "sent" ? (
-            <MessageStatus
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+            <h3>TRANSMISSION SUCCESSFUL</h3>
+            <p>Your data packet has been received safely.</p>
+            <button
+              onClick={() => {
+                setFormState("idle");
+                setFormData({ name: "", email: "", message: "" });
+              }}
+              style={{
+                background: "transparent",
+                border: "1px solid currentColor",
+                padding: "0.5rem 1rem",
+                color: "inherit",
+                marginTop: "1.5rem",
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
             >
-              <h3 style={{ margin: 0 }}>TRANSMISSION COMPLETE</h3>
-              <p>Data packet received successfully. Standby for response.</p>
-              <button
-                onClick={() => setFormState("idle")}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "#fff",
-                  textDecoration: "underline",
-                  marginTop: "10px",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                }}
-              >
-                SEND_NEW_PACKET
-              </button>
-            </MessageStatus>
-          ) : (
-            <Form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label>IDENTIFIER_NAME</Label>
-                <Input
-                  type="text"
-                  placeholder="Enter your designation..."
-                  required
-                  disabled={formState === "sending"}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>CONTACT_FREQUENCY (EMAIL)</Label>
-                <Input
-                  type="email"
-                  placeholder="Enter secure channel..."
-                  required
-                  disabled={formState === "sending"}
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>DATA_PACKET (MESSAGE)</Label>
-                <TextArea
-                  placeholder="Enter encrypted message data..."
-                  required
-                  disabled={formState === "sending"}
-                />
-              </FormGroup>
-
-              <SubmitBtn
-                type="submit"
+              SEND ANOTHER
+            </button>
+          </MessageStatus>
+        ) : (
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label>DESIGNATION (NAME)</Label>
+              <Input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter Name"
+                required
                 disabled={formState === "sending"}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {formState === "sending"
-                  ? "TRANSMITTING..."
-                  : "ESTABLISH UPLINK"}
-              </SubmitBtn>
-            </Form>
-          )}
-        </ContentArea>
-      </TerminalContainer>
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label>FREQUENCY (EMAIL)</Label>
+              <Input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter Email"
+                required
+                disabled={formState === "sending"}
+              />
+            </FormGroup>
+
+            <FormGroup $fullWidth>
+              <Label>DATA PACKET (MESSAGE)</Label>
+              <TextArea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Enter Message"
+                required
+                disabled={formState === "sending"}
+              />
+            </FormGroup>
+
+            <SubmitBtn
+              type="submit"
+              disabled={formState === "sending"}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {formState === "sending"
+                ? "TRANSMITTING..."
+                : "ESTABLISH UPLINK >>"}
+            </SubmitBtn>
+          </Form>
+        )}
+      </CyberFormContainer>
     </Section>
   );
 };

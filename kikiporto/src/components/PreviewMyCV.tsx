@@ -39,6 +39,10 @@ const Container = styled.section`
     animation: ${animations.rotate} 60s linear infinite;
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
 `;
 
 const WindowFrame = styled(motion.div)`
@@ -287,12 +291,12 @@ const PDFViewer = styled.div`
     width: 100%;
     height: 100%;
     border: none;
-    filter: invert(0.9) hue-rotate(180deg) brightness(0.8);
+    filter: invert(0.9) hue-rotate(180deg) brightness(0.8) blur(5px);
     transition: filter 0.3s;
   }
 
   &:hover iframe {
-    filter: invert(0);
+    filter: invert(0) blur(0px);
   }
 
   /* Overlay text when inverted */

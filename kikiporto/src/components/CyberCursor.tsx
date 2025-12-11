@@ -5,21 +5,31 @@ import styled from "styled-components";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { colors } from "../styles/shared";
 
-const CursorRing = styled(motion.div)`
+const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+  mix-blend-mode: difference;
+`;
+
+const Scope = styled(motion.div)`
+  position: absolute;
   width: 40px;
   height: 40px;
   border: 1px solid ${colors.neonCyan};
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%); /* Center on cursor */
 
+  /* Crosshair lines */
   &::before,
   &::after {
     content: "";
@@ -27,96 +37,111 @@ const CursorRing = styled(motion.div)`
     background: ${colors.neonCyan};
   }
 
-  /* Crosshair lines */
   &::before {
-    width: 2px;
+    width: 100%;
+    height: 1px;
+  }
+
+  &::after {
+    width: 1px;
     height: 100%;
   }
-  &::after {
-    width: 100%;
-    height: 2px;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
+const DataLabel = styled(motion.div)`
+  position: absolute;
+  top: -40px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid ${colors.neonGreen};
+  padding: 5px 10px;
+  font-family: var(--font-share-tech-mono);
+  color: ${colors.neonGreen};
+  font-size: 0.7rem;
+  white-space: nowrap;
+  pointer-events: none;
+`;
+
+const LockOnRing = styled(motion.div)`
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 1px dashed ${colors.neonPurple};
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+`;
+
 const CyberCursor = () => {
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-
-  const springConfig = { damping: 25, stiffness: 400 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-
+  const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
+  const [targetLabel, setTargetLabel] = useState("");
+
+  // Smooth spring animation for cursor
+  const springConfig = { damping: 25, stiffness: 300 };
+  const cursorX = useSpring(0, springConfig);
+  const cursorY = useSpring(0, springConfig);
 
   useEffect(() => {
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 20);
-      cursorY.set(e.clientY - 20);
-    };
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
 
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
-    const handleLinkHoverStart = (e: MouseEvent) => {
+      // Check for hover targets
       const target = e.target as HTMLElement;
-      if (
-        target.tagName.toLowerCase() === "a" ||
-        target.tagName.toLowerCase() === "button" ||
+      const clickable =
         target.closest("a") ||
-        target.closest("button")
-      ) {
+        target.closest("button") ||
+        target.closest("input") ||
+        target.closest("textarea");
+
+      if (clickable) {
         setIsHovering(true);
+        const tagName = clickable.tagName.toLowerCase();
+        setTargetLabel(tagName === "a" ? "LINK_DETECTED" : "INTERACTABLE");
+      } else {
+        setIsHovering(false);
+        setTargetLabel("");
       }
     };
 
-    const handleLinkHoverEnd = () => {
-      setIsHovering(false);
-    };
-
-    window.addEventListener("mousemove", moveCursor);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    // Use event delegation for hover detection
-    document.addEventListener("mouseover", handleLinkHoverStart);
-    document.addEventListener("mouseout", handleLinkHoverEnd);
-
-    return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mouseover", handleLinkHoverStart);
-      document.removeEventListener("mouseout", handleLinkHoverEnd);
-    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [cursorX, cursorY]);
 
   return (
-    <CursorRing
-      style={{
-        x: cursorXSpring,
-        y: cursorYSpring,
-      }}
-      animate={{
-        scale: isClicking ? 0.8 : isHovering ? 1.5 : 1,
-        rotate: isHovering ? 45 : 0,
-        borderColor: isClicking
-          ? colors.neonGreen
-          : isHovering
-          ? colors.neonPurple
-          : colors.neonCyan,
-      }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-    >
-      <motion.div
-        style={{
-          width: "4px",
-          height: "4px",
-          background: colors.neonCyan,
-          borderRadius: "50%",
-        }}
-      />
-    </CursorRing>
+    <Container>
+      <Scope
+        style={{ x: cursorX, y: cursorY }}
+        animate={{ scale: isHovering ? 1.5 : 1, rotate: isHovering ? 45 : 0 }}
+      >
+        {isHovering && (
+          <LockOnRing
+            animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+            transition={{
+              rotate: { repeat: Infinity, duration: 4, ease: "linear" },
+              scale: { repeat: Infinity, duration: 1 },
+            }}
+          />
+        )}
+      </Scope>
+      {isHovering && (
+        <DataLabel
+          style={{ x: cursorX, y: cursorY }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          TARGET: {targetLabel}
+          <br />
+          X:{Math.round(mousePosition.x)} Y:{Math.round(mousePosition.y)}
+        </DataLabel>
+      )}
+    </Container>
   );
 };
 
