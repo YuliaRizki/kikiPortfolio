@@ -1,23 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import styled, { keyframes } from "styled-components";
 import {
   motion,
-  AnimatePresence,
   useMotionValue,
   useSpring,
+  useAnimationFrame,
 } from "framer-motion";
 import { colors, cyberGrid } from "../styles/shared";
 
 const Section = styled.section`
-  min-height: 80vh;
+  min-height: 100vh;
   position: relative;
-  background-color: ${colors.darkBg};
+  background-color: transparent;
   color: #fff;
-  padding: 8rem 1rem; /* Increased top padding */
-  overflow: hidden;
-  ${cyberGrid}
+  padding: 8rem 1rem;
   perspective: 1000px;
 
   /* Vignette */
@@ -32,14 +30,23 @@ const Section = styled.section`
     );
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+    padding: 3rem 1rem;
+    min-height: auto;
+  }
 `;
 
 const Header = styled.div`
   text-align: center;
-  margin-bottom: 6rem; /* Increased margin */
+  margin-bottom: 6rem;
   position: relative;
-  z-index: 20; /* Higher z-index */
+  z-index: 20;
   padding: 0 1rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 3rem;
+  }
 `;
 
 const Title = styled.h2`
@@ -61,22 +68,35 @@ const Title = styled.h2`
 const CarouselContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 600px; /* Increased height */
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
   transform-style: preserve-3d;
   z-index: 5;
+
+  /* Define radius variable */
+  --carousel-radius: 650px;
+
+  @media (max-width: 768px) {
+    height: 400px;
+    --carousel-radius: 260px; /* Smaller radius for mobile */
+  }
 `;
 
 const CarouselTrack = styled(motion.div)`
   position: relative;
-  width: 380px; /* Increased width */
-  height: 520px; /* Increased height */
+  width: 380px;
+  height: 520px;
   transform-style: preserve-3d;
+
+  @media (max-width: 768px) {
+    width: 200px;
+    height: 300px;
+  }
 `;
 
-const Card = styled(motion.div)<{ $index: number; $total: number }>`
+const Card = styled.div<{ $index: number; $total: number }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -132,33 +152,6 @@ const Card = styled(motion.div)<{ $index: number; $total: number }>`
   }
 `;
 
-const Controls = styled.div`
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  margin-top: 3rem;
-  z-index: 10;
-  position: relative;
-`;
-
-const ControlBtn = styled.button`
-  background: transparent;
-  border: 1px solid ${colors.neonCyan};
-  color: ${colors.neonCyan};
-  padding: 1rem 2rem;
-  font-family: var(--font-orbitron);
-  cursor: pointer;
-  transition: all 0.3s;
-  text-transform: uppercase;
-
-  &:hover {
-    background: ${colors.neonCyan};
-    color: #000;
-    box-shadow: 0 0 20px ${colors.neonCyan};
-  }
-`;
-
-// Placeholder images from Picsum or colors
 const photos = [
   {
     id: 1,
@@ -211,8 +204,7 @@ const photos = [
   },
 ];
 
-// Add SwipeHint styled component
-const SwipeHint = styled(motion.div)`
+const SwipeHint = styled.div`
   margin-top: 2rem;
   font-family: var(--font-share-tech-mono);
   color: ${colors.neonCyan};
@@ -229,7 +221,7 @@ const SwipeHint = styled(motion.div)`
   }
 `;
 
-const IntroText = styled(motion.div)`
+const IntroText = styled.div`
   text-align: center;
   margin-bottom: 2rem;
   font-family: var(--font-share-tech-mono);
@@ -246,30 +238,38 @@ const IntroText = styled(motion.div)`
 `;
 
 const CyberGallery = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
   const rotation = useMotionValue(0);
   const smoothRotation = useSpring(rotation, { stiffness: 40, damping: 20 });
 
-  const onDragEnd = (event: any, info: any) => {
-    const threshold = 20;
-    const currentRot = rotation.get();
-    const angle = 360 / photos.length;
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-    if (info.offset.x > threshold) {
-      rotation.set(currentRot - angle);
-    } else if (info.offset.x < -threshold) {
-      rotation.set(currentRot + angle);
-    }
+  // Auto-rotate effect (Continuous)
+  useAnimationFrame((time, delta) => {
+    if (!autoplay) return;
+    const current = rotation.get();
+    // 10 degrees per second
+    rotation.set(current - (delta / 1000) * 10);
+  });
+
+  const onDragStart = () => {
+    setAutoplay(false);
   };
 
-  // Handle touch-pad / mouse wheel scroll
-  const handleWheel = (e: React.WheelEvent) => {
-    // Only capture horizontal scroll to avoid trapping vertical page scroll
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      e.preventDefault();
-      const currentRot = rotation.get();
-      rotation.set(currentRot - e.deltaX * 1.5);
-    }
+  const onDragEnd = () => {
+    setAutoplay(true);
   };
+
+  const handleDrag = (_: any, info: any) => {
+    const current = rotation.get();
+    // Adjust sensitivity as needed
+    rotation.set(current + info.delta.x * 0.4);
+  };
+
+  if (!isMounted) return null;
 
   return (
     <Section id="gallery">
@@ -279,11 +279,7 @@ const CyberGallery = () => {
         </Title>
       </Header>
 
-      <IntroText
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        whileHover={{ scale: 1.05, textShadow: `0 0 8px ${colors.neonGreen}` }}
-      >
+      <IntroText>
         <motion.div
           animate={{ opacity: [0.8, 1, 0.8] }}
           transition={{
@@ -295,87 +291,105 @@ const CyberGallery = () => {
         >
           <span>SYSTEM_MSG:</span>
         </motion.div>
-        "Art is my spirit." (I draw too!)
+        &quot;Art is my spirit.&quot; (I draw too!)
       </IntroText>
 
-      <div
-        onWheel={handleWheel}
+      {/* Swipe Area */}
+      <motion.div
+        onMouseEnter={() => setAutoplay(false)}
+        onMouseLeave={() => setAutoplay(true)}
+        onPan={(event, info) => {
+          // Manually update rotation based on pan delta
+          const current = rotation.get();
+          rotation.set(current + info.delta.x * 0.5); // increased sensitivity
+        }}
+        onPanStart={() => setAutoplay(false)}
+        onPanEnd={() => setAutoplay(true)}
         style={{
           perspective: "1200px",
-          overflow: "hidden",
-          padding: "50px 0",
+          width: "100%",
+          height: "600px",
+          position: "relative",
           cursor: "grab",
+          touchAction: "none", // Critical: prevents browser scrolling while dragging
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 10,
         }}
+        whileTap={{ cursor: "grabbing" }}
       >
-        <CarouselContainer>
-          <CarouselTrack
-            // Use style for performant motion value animation
-            style={{ rotateY: smoothRotation, z: -650 }}
-            // Enable dragging
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.05} // Stiff elastic feeling
-            onDragEnd={onDragEnd}
-            whileTap={{ cursor: "grabbing" }}
+        <CarouselContainer style={{ pointerEvents: "none" }}>
+          {" "}
+          {/* Container ignores clicks, passes to parent */}
+          <div
+            style={{
+              transform: "translateZ(calc(-1 * var(--carousel-radius)))",
+              transformStyle: "preserve-3d",
+              pointerEvents: "auto", // Re-enable pointer events for children if needed (e.g. clicking a card)
+            }}
           >
-            {photos.map((photo, index) => {
-              const angle = (360 / photos.length) * index;
-              return (
-                <Card
-                  key={photo.id}
-                  $index={index}
-                  $total={photos.length}
-                  style={{
-                    transform: `rotateY(${angle}deg) translateZ(650px)`, // Increased radius
-                  }}
-                >
-                  <div
+            <CarouselTrack style={{ rotateY: smoothRotation }}>
+              {photos.map((photo, index) => {
+                const angle = (360 / photos.length) * index;
+                return (
+                  <Card
+                    key={photo.id}
+                    $index={index}
+                    $total={photos.length}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Allow clicking card without triggering pan issues if needed
+                    }}
                     style={{
-                      flex: 1,
-                      backgroundColor: "#111",
-                      borderRadius: "8px",
-                      marginBottom: "10px",
-                      position: "relative",
-                      overflow: "hidden",
+                      transform: `rotateY(${angle}deg) translateZ(var(--carousel-radius))`,
                     }}
                   >
-                    <img
-                      src={photo.src}
-                      alt={photo.title}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    {/* Scanline effect over image */}
                     <div
                       style={{
-                        position: "absolute",
-                        inset: 0,
-                        background:
-                          "linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06))",
-                        backgroundSize: "100% 2px, 3px 100%",
-                        pointerEvents: "none",
+                        flex: 1,
+                        backgroundColor: "#111",
+                        borderRadius: "8px",
+                        marginBottom: "10px",
+                        position: "relative",
+                        overflow: "hidden",
                       }}
-                    />
-                  </div>
-                  <h4>{photo.title}</h4>
-                  <p>{photo.desc}</p>
-                </Card>
-              );
-            })}
-          </CarouselTrack>
+                    >
+                      <img
+                        src={photo.src}
+                        alt={photo.title}
+                        draggable={false}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          userSelect: "none", // Prevent selection
+                          pointerEvents: "none", // Allow clicks to pass through to Card or parent
+                        }}
+                      />
+                      {/* Scanline effect over image */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06))",
+                          backgroundSize: "100% 2px, 3px 100%",
+                          pointerEvents: "none",
+                        }}
+                      />
+                    </div>
+                    <h4>{photo.title}</h4>
+                    <p>{photo.desc}</p>
+                  </Card>
+                );
+              })}
+            </CarouselTrack>
+          </div>
         </CarouselContainer>
-      </div>
+      </motion.div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <SwipeHint
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-        >
-          SCROLL / DRAG_TO_NAVIGATE
-        </SwipeHint>
+        <SwipeHint>SCROLL / DRAG_TO_NAVIGATE</SwipeHint>
       </div>
     </Section>
   );

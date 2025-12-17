@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
@@ -21,7 +21,7 @@ const SidebarContainer = styled(motion.nav)`
   align-items: center;
   justify-content: space-between;
   padding: 2rem 0;
-  z-index: 100;
+  z-index: 9999;
   transition: width 0.3s ease;
   overflow: hidden;
 
@@ -42,15 +42,10 @@ const SidebarContainer = styled(motion.nav)`
     box-shadow: 0 0 10px #00ff9f;
   }
 
-  &:hover {
-    width: 240px;
-    background: rgba(5, 5, 5, 0.95);
-    border-right: 1px solid rgba(0, 255, 159, 0.5);
-
-    &::before {
-      box-shadow: 0 0 20px #00ff9f;
-    }
-  }
+  /* Removed hover expansion */
+  /* &:hover {
+    width: 240px; 
+  } */
 
   @media (max-width: 768px) {
     top: auto;
@@ -73,11 +68,6 @@ const SidebarContainer = styled(motion.nav)`
         rgba(0, 243, 255, 0) 50%,
         #bc13fe
       );
-    }
-
-    &:hover {
-      width: 100%;
-      border-right: none;
     }
   }
 `;
@@ -114,19 +104,6 @@ const NeonLogo = styled.div`
 
   span {
     display: none;
-    margin-left: 10px;
-    font-size: 1.2rem;
-    white-space: nowrap;
-  }
-
-  ${SidebarContainer}:hover & {
-    width: 90%;
-    justify-content: flex-start;
-    padding-left: 1.5rem;
-
-    span {
-      display: block;
-    }
   }
 `;
 
@@ -142,9 +119,11 @@ const NavList = styled.ul`
 
   @media (max-width: 768px) {
     flex-direction: row;
-    justify-content: space-around;
-    gap: 0;
+    justify-content: center; /* Center the nav items */
+    gap: 1.5rem; /* Add gap back since we have space now */
     height: 100%;
+    width: 100%;
+    padding-right: 50px; /* Make room for the absolute toggle */
   }
 `;
 
@@ -195,47 +174,25 @@ const NavLink = styled.a`
     pointer-events: none;
   }
 
-  ${SidebarContainer}:hover & {
-    width: 90%;
-    justify-content: flex-start;
-    padding-left: 1rem;
-    background: transparent;
+  /* Tooltip logic: Check for hover on item */
+  &:hover {
+    background: rgba(0, 255, 159, 0.1);
+    color: #00ff9f;
+    border: 1px solid rgba(0, 255, 159, 0.3);
+    box-shadow: 0 0 15px rgba(0, 255, 159, 0.2);
+
+    svg {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 5px #00ff9f);
+      color: #00ff9f;
+    }
 
     .label {
-      opacity: 1;
-      position: static;
-      background: transparent;
-      border: none;
-      padding: 0 0 0 1rem;
-      color: #fff;
-    }
-
-    &:hover {
-      background: rgba(0, 255, 159, 0.1);
-      color: #00ff9f;
-      border: 1px solid rgba(0, 255, 159, 0.3);
-      box-shadow: 0 0 15px rgba(0, 255, 159, 0.2);
-
-      svg {
-        transform: scale(1.1);
-        filter: drop-shadow(0 0 5px #00ff9f);
-        color: #00ff9f;
-      }
-
-      .label {
-        color: #00ff9f;
-        text-shadow: 0 0 5px rgba(0, 255, 159, 0.5);
-      }
-    }
-  }
-
-  /* Tooltip for collapsed state */
-  &:hover .label {
-    ${SidebarContainer}:not(:hover) & {
       opacity: 1;
       top: 50%;
       transform: translateY(-50%);
       left: 60px;
+      text-shadow: 0 0 5px rgba(0, 255, 159, 0.5);
     }
   }
 
@@ -245,12 +202,6 @@ const NavLink = styled.a`
 
     .label {
       display: none !important;
-    }
-
-    ${SidebarContainer}:hover & {
-      width: auto;
-      justify-content: center;
-      padding-left: 0;
     }
   }
 `;
@@ -275,30 +226,10 @@ const ThemeToggle = styled.button`
     box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
   }
 
-  ${SidebarContainer}:hover & {
-    width: 90%;
-    border-color: #bc13fe;
-    gap: 10px;
-
-    &::after {
-      content: "Toggle Mode";
-      font-family: var(--font-share-tech-mono), monospace;
-      font-size: 0.9rem;
-    }
-  }
-
   @media (max-width: 768px) {
     width: 40px;
     height: 40px;
     border: none;
-
-    ${SidebarContainer}:hover & {
-      width: 40px;
-      gap: 0;
-      &::after {
-        display: none;
-      }
-    }
   }
 `;
 
@@ -325,10 +256,6 @@ const FooterDecor = styled.div`
     color: #00f3ff;
     letter-spacing: 2px;
     font-family: var(--font-orbitron);
-  }
-
-  ${SidebarContainer}:hover & {
-    display: none; /* Hide decor when expanded to clean up UI */
   }
 
   @media (max-width: 768px) {
@@ -419,13 +346,35 @@ const Icons = {
   ),
 };
 
+const ToolsContainer = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+  padding-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    margin-top: 0;
+    width: auto;
+    padding-bottom: 0;
+    flex-direction: row;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10000;
+  }
+`;
+
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
     <SidebarContainer
-      initial={{ x: -100 }}
-      animate={{ x: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       <LogoContainer>
@@ -473,17 +422,7 @@ const Navbar = () => {
         </NavItem>
       </NavList>
 
-      <div
-        style={{
-          marginTop: "auto",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          gap: "1rem",
-          paddingBottom: "1rem",
-        }}
-      >
+      <ToolsContainer>
         <ThemeToggle onClick={toggleTheme}>
           {theme === "dark" ? "🌙" : "☀️"}
         </ThemeToggle>
@@ -492,7 +431,7 @@ const Navbar = () => {
           <span className="text">SYS.V.1.0</span>
           <div className="line" />
         </FooterDecor>
-      </div>
+      </ToolsContainer>
     </SidebarContainer>
   );
 };

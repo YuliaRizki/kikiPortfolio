@@ -61,8 +61,8 @@ export default function HoloCore() {
   const themeColors =
     theme === "light"
       ? {
-          cyan: "#0099aa",
-          purple: "#800080",
+          cyan: "#ff5d8f", // Industrial Pink
+          purple: "#8e85a0", // Muted Lavender
         }
       : {
           cyan: "#00f3ff",

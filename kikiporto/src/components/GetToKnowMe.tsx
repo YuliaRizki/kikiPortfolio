@@ -13,8 +13,8 @@ import { colors, animations, cyberGrid } from "../styles/shared";
 const Section = styled.section`
   min-height: 100vh;
   position: relative;
-  background-color: ${colors.darkBg};
-  color: #fff;
+  background-color: transparent;
+  color: var(--text-primary);
   overflow: hidden;
   padding: 4rem 2rem;
   display: flex;
@@ -22,7 +22,8 @@ const Section = styled.section`
   justify-content: center;
 
   /* Grid Background */
-  ${cyberGrid}
+  /* Grid removed */
+  /* ${cyberGrid} */
 `;
 
 const ContentWrapper = styled(motion.div)`
@@ -52,7 +53,7 @@ const GlitchHeader = styled.h2`
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   position: relative;
-  color: #fff;
+  color: var(--text-primary);
   text-shadow: 2px 2px 0px ${colors.neonPurple};
 
   &::before {
@@ -74,7 +75,7 @@ const GlitchHeader = styled.h2`
 const TerminalText = styled.p`
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #a0a0a0;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
   border-left: 2px solid ${colors.neonCyan};
   padding-left: 1rem;
@@ -108,7 +109,7 @@ const StatLabel = styled.span`
 const ProgressBar = styled.div<{ width: string }>`
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--grid-color);
   position: relative;
   overflow: hidden;
 
@@ -264,7 +265,7 @@ const FunFactBox = styled(motion.div)`
   margin-top: 3rem;
   padding: 1.5rem;
   border: 1px dashed ${colors.neonCyan};
-  background: rgba(0, 243, 255, 0.05);
+  background: var(--grid-color);
   position: relative;
   cursor: help;
   overflow: hidden;
@@ -346,7 +347,9 @@ const GetToKnowMe = () => {
               <span style={{ fontSize: "1.2rem" }}>⚡</span>
               BONUS_DATA_PACK
             </FunFactTitle>
-            <div style={{ color: "#ccc", fontSize: "0.95rem" }}>
+            <div
+              style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}
+            >
               <ScrambleText
                 text="Encrypting data... Hover to view."
                 hoverResult="Fun Fact: I can debug code in my sleep (literally) and I assume 90% of bugs are typos."

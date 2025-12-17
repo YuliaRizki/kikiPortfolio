@@ -2,21 +2,24 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import styled, { css } from "styled-components";
-import { colors, animations, cyberGrid } from "../styles/shared";
+import styled from "styled-components";
+import { colors, cyberGrid } from "../styles/shared";
 
 // --- Styled Components ---
 
 const Container = styled.section`
   min-height: 100vh;
-  background-color: ${colors.darkBg};
+  background-color: transparent;
   position: relative;
-  padding: 8rem 2rem;
+  padding: 6rem 2rem;
   overflow: hidden;
   font-family: var(--font-share-tech-mono), "Courier New", monospace;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-  /* Cyber Grid Background */
-  ${cyberGrid}
+  /* Grid removed */
+  /* ${cyberGrid} */
 
   &::before {
     content: "";
@@ -35,29 +38,48 @@ const Container = styled.section`
 
   @media (max-width: 768px) {
     padding: 4rem 1rem;
+    min-height: auto;
   }
 `;
 
 const Header = styled(motion.div)`
   text-align: center;
-  margin-bottom: 6rem;
+  margin-bottom: 3rem;
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+  }
 `;
 
 const Title = styled.h2`
   font-family: var(--font-orbitron), sans-serif;
-  font-size: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(2rem, 8vw, 5rem);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin: 0;
   position: relative;
+  text-align: center;
+  max-width: 100%;
+  padding: 0 10px;
 
   text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+
+  @media (max-width: 1024px) {
+    font-size: clamp(1.5rem, 6vw, 3rem); /* Smaller on tablets */
+    word-break: break-word; /* Break if necessary */
+    overflow-wrap: break-word;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+    word-break: break-all; /* Aggressive break on mobile */
+  }
 
   &::before {
     content: attr(data-text);
@@ -98,7 +120,8 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  max-width: 1600px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   z-index: 2;
@@ -125,6 +148,7 @@ const CardFrame = styled(motion.div)`
   background: rgba(10, 10, 14, 0.6);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--card-radius);
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
 
@@ -491,22 +515,6 @@ const projects = [
     tags: ["Social", "Fullstack", "Web"],
     mediaType: "none",
   },
-  {
-    id: 5,
-    title: "RPS Battle",
-    description:
-      "Multiplayer Pokémon-themed Rock-Paper-Scissors with real-time socket connections.",
-    tags: ["GameDev", "Socket.IO", "AWS"],
-    mediaType: "none",
-  },
-  {
-    id: 6,
-    title: "Super Vakir",
-    description:
-      "Interactive restaurant menu demonstrating pure Vanilla JS DOM manipulation mastery.",
-    tags: ["Vanilla JS", "DOM", "UI/UX"],
-    mediaType: "none",
-  },
 ];
 
 const MyProjects = () => {
@@ -522,7 +530,7 @@ const MyProjects = () => {
       >
         <Title data-text="SYSTEM_PROJECTS">SYSTEM_PROJECTS</Title>
         <Subtitle>
-          <span>// DEPLOYED_MODULES</span>
+          <span>{"//"} DEPLOYED_MODULES</span>
         </Subtitle>
       </Header>
 

@@ -29,18 +29,39 @@ const MessageOverlay = styled.div`
   font-size: 3rem;
   pointer-events: none;
   background: rgba(0, 0, 0, 0.85);
-  color: ${colors.neonGreen};
+  color: var(--neon-cyan);
 
   h1 {
-    text-shadow: 0 0 20px ${colors.neonGreen}, 0 0 40px ${colors.neonGreen};
+    font-family: "Impact", "Anton", sans-serif;
+    text-transform: uppercase;
+    font-size: 5rem;
+    letter-spacing: 10px;
+    border: 6px solid var(--neon-cyan); /* Theme color */
+    padding: 20px 40px;
+    background: #000;
+    text-shadow: 4px 4px 0 var(--neon-purple);
     animation: ${glitchAnim} 0.2s infinite;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+      padding: 10px 20px;
+      letter-spacing: 4px;
+      border-width: 3px;
+    }
   }
 
   p {
+    font-family: "Fira Code", monospace;
     font-size: 1.5rem;
     color: #fff;
-    margin-top: 1rem;
+    margin-top: 2rem;
     letter-spacing: 4px;
+    text-transform: uppercase;
+    background: var(--neon-purple);
+    color: #000;
+    padding: 5px 10px;
+    font-weight: bold;
   }
 `;
 
@@ -52,8 +73,8 @@ const FilterOverlay = styled.div`
   height: 100vh;
   z-index: 9999;
   pointer-events: none;
-  backdrop-filter: hue-rotate(90deg) contrast(1.2); /* Removed brightness dimming */
-  mix-blend-mode: overlay; /* Blend nicely with content */
+  backdrop-filter: contrast(1.5) saturate(1.5); /* Extreme Brutalist Filter */
+  mix-blend-mode: overlay;
 `;
 
 const MatrixCanvas = styled.canvas`
@@ -62,9 +83,10 @@ const MatrixCanvas = styled.canvas`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9998; /* Behind the filter overlay layer for style */
+  z-index: 9998;
   pointer-events: none;
-  opacity: 0.15; /* Subtle code rain */
+  opacity: 0.25; /* Increased opacity */
+  filter: hue-rotate(-110deg); /* Shift Green to Red/Orange */
 `;
 
 const MatrixRain = () => {
@@ -97,7 +119,7 @@ const MatrixRain = () => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#0F0"; // Green text
+      ctx.fillStyle = "#0F0"; // Green text base (will be shifted by CSS filter)
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < rainDrops.length; i++) {
@@ -149,26 +171,6 @@ const KonamiCode = () => {
     "KeyA",
   ];
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const newKey = e.code;
-
-      setInput((prev) => {
-        const updated = [...prev, newKey];
-        if (updated.length > sequence.length) updated.shift();
-
-        if (JSON.stringify(updated) === JSON.stringify(sequence)) {
-          activateGodMode();
-          return [];
-        }
-        return updated;
-      });
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   const playSound = () => {
     const AudioContext =
       window.AudioContext || (window as any).webkitAudioContext;
@@ -199,15 +201,80 @@ const KonamiCode = () => {
   const activateGodMode = () => {
     if (godMode) {
       setGodMode(false);
-      return;
+      setShowMsg(false);
+    } else {
+      playSound();
+      setGodMode(true);
+      setShowMsg(true);
+      setTimeout(() => setShowMsg(false), 3000); // 3 seconds message
     }
-
-    setGodMode(true);
-    setShowMsg(true);
-    playSound();
-
-    setTimeout(() => setShowMsg(false), 3000);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const newKey = e.code;
+
+      setInput((prev) => {
+        const updated = [...prev, newKey];
+        if (updated.length > sequence.length) updated.shift();
+
+        if (JSON.stringify(updated) === JSON.stringify(sequence)) {
+          activateGodMode();
+          return [];
+        }
+        return updated;
+      });
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [godMode]); // Added godMode dependency for safety
+
+  // --- Mobile/Desktop Trigger (2 Taps) ---
+  const [tapCount, setTapCount] = useState(0);
+
+  useEffect(() => {
+    // Reset tap count if no second tap happens quickly
+    const timer = setTimeout(() => setTapCount(0), 300);
+    return () => clearTimeout(timer);
+  }, [tapCount]);
+
+  useEffect(() => {
+    const handleTap = (e: Event) => {
+      // Ignore if clicking on interactive elements
+      if (
+        (e.target as HTMLElement).tagName === "BUTTON" ||
+        (e.target as HTMLElement).tagName === "A"
+      ) {
+        return;
+      }
+
+      setTapCount((prev) => {
+        const newCount = prev + 1;
+        if (newCount === 2) {
+          activateGodMode();
+          return 0; // Reset after activation
+        }
+        return newCount;
+      });
+    };
+
+    // Attach to click event for broad compatibility (mobile + desktop)
+    window.addEventListener("click", handleTap);
+
+    return () => {
+      window.removeEventListener("click", handleTap);
+    };
+  }, [godMode]); // Added godMode dependency to ensure latest state access if needed
+
+  // God Mode Class Injector
+  useEffect(() => {
+    if (godMode) {
+      document.body.classList.add("god-mode");
+    } else {
+      document.body.classList.remove("god-mode");
+    }
+  }, [godMode]);
 
   return (
     <>
@@ -215,8 +282,10 @@ const KonamiCode = () => {
         <>
           <FilterOverlay />
           <MatrixRain />
+          <CyberEarth />
         </>
       )}
+
       {showMsg && (
         <MessageOverlay>
           <h1>GOD MODE ACTIVATED</h1>

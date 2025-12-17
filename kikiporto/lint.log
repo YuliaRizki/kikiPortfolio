@@ -1,0 +1,74 @@
+
+> kikiporto@0.1.0 lint
+> next lint
+
+
+./src/components/AvatarParticles.tsx
+3:17  Error: 'useMemo' is defined but never used.  @typescript-eslint/no-unused-vars
+26:13  Error: 'scale' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/Contact.tsx
+6:18  Error: 'animations' is defined but never used.  @typescript-eslint/no-unused-vars
+288:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/CyberAudio.tsx
+3:38  Error: 'useRef' is defined but never used.  @typescript-eslint/no-unused-vars
+16:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+67:10  Error: 'hasInteracted' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/CyberCat.tsx
+9:7  Error: 'float' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+142:6  Warning: React Hook useEffect has a missing dependency: 'idleMessages'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/CyberCursor.tsx
+5:18  Error: 'useMotionValue' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/CyberEarth.tsx
+10:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/CyberGallery.tsx
+3:27  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+7:3  Error: 'AnimatePresence' is defined but never used.  @typescript-eslint/no-unused-vars
+145:7  Error: 'Controls' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+154:7  Error: 'ControlBtn' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+271:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+271:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+322:9  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+322:27  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+369:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/GetToKnowMe.tsx
+5:18  Error: 'useScroll' is defined but never used.  @typescript-eslint/no-unused-vars
+5:29  Error: 'useTransform' is defined but never used.  @typescript-eslint/no-unused-vars
+159:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+188:3  Error: 'speed' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+206:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+207:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/Hero.tsx
+2:17  Error: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
+2:27  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+6:18  Error: 'animations' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/HoloCore.tsx
+8:51  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+9:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+10:27  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/HologramBackground.tsx
+62:20  Warning: The ref value 'containerRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'containerRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/KonamiCode.tsx
+5:10  Error: 'colors' is defined but never used.  @typescript-eslint/no-unused-vars
+148:10  Error: 'input' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+184:6  Warning: React Hook useEffect has missing dependencies: 'activateGodMode' and 'sequence'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+197:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/MyProjects.tsx
+5:18  Error: 'css' is defined but never used.  @typescript-eslint/no-unused-vars
+6:18  Error: 'animations' is defined but never used.  @typescript-eslint/no-unused-vars
+533:17  Error: Comments inside children section of tag should be placed inside braces  react/jsx-no-comment-textnodes
+555:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+647:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules

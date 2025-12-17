@@ -8,11 +8,12 @@ import { colors, cyberGrid } from "../styles/shared";
 const Section = styled.section`
   min-height: 100vh;
   position: relative;
-  background-color: ${colors.darkBg};
-  color: #fff;
+  background-color: transparent;
+  color: var(--text-primary);
   padding: 6rem 2rem;
   overflow: hidden;
-  ${cyberGrid}
+  /* Grid removed */
+  /* ${cyberGrid} */
 
   &::before {
     content: "";
@@ -30,21 +31,26 @@ const Section = styled.section`
   }
 
   @media (max-width: 768px) {
-    padding: 4rem 1rem;
+    padding: 3rem 1rem;
+    min-height: auto;
   }
 `;
 
 const Header = styled(motion.div)`
   text-align: center;
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
   position: relative;
   z-index: 2;
+
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+  }
 `;
 
 const Title = styled.h2`
   font-family: var(--font-orbitron);
   font-size: 3rem;
-  color: #fff;
+  color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 4px;
   text-shadow: 0 0 10px ${colors.neonPurple};
@@ -92,7 +98,8 @@ const TimelineItem = styled(motion.div)`
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
-    padding-left: 50px;
+    padding-left: 40px;
+    margin-bottom: 2rem;
   }
 
   /* Dot on the line */
@@ -127,9 +134,9 @@ const TimelineItem = styled(motion.div)`
 
 const ContentBox = styled(motion.div)<{ position: "left" | "right" }>`
   width: 45%;
-  background: rgba(10, 10, 14, 0.6);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 243, 255, 0.2);
+  border: 1px solid var(--neon-cyan);
   padding: 1.5rem;
   position: relative;
   margin-left: ${(props) => (props.position === "right" ? "auto" : "0")};
@@ -181,7 +188,7 @@ const DateBadge = styled.div`
 const JobTitle = styled.h3`
   font-family: var(--font-orbitron);
   font-size: 1.4rem;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 
   @media (max-width: 768px) {
@@ -210,7 +217,7 @@ const Company = styled.div`
 const Description = styled.ul`
   list-style: none;
   padding: 0;
-  color: #aaa;
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
 

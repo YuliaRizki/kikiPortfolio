@@ -19,14 +19,13 @@ const HeroSection = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: ${colors.darkBg};
+  background: transparent;
   overflow: hidden;
   perspective: 1000px;
 
   /* Cyber Grid & Vignette */
-  background-image: linear-gradient(${colors.darkBg} 20%, transparent 20%),
-    linear-gradient(90deg, ${colors.darkBg} 20%, transparent 20%);
-  background-size: 50px 50px;
+  /* Grid removed */
+  background-image: none;
 
   &::after {
     content: "";
@@ -49,7 +48,8 @@ const BackgroundTitle = styled(motion.h1)`
   font-family: var(--font-orbitron);
   font-size: clamp(5rem, 20vw, 15rem);
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.03); /* Extremely subtle ghost text */
+  color: var(--text-primary);
+  opacity: 0.05;
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
@@ -97,10 +97,11 @@ const Name = styled(motion.h2)`
   font-family: var(--font-orbitron);
   font-size: clamp(2.5rem, 5vw, 5rem);
   font-weight: 900;
+  font-weight: 900;
   letter-spacing: 10px;
-  color: #fff;
+  color: var(--text-primary);
   text-shadow: 0 0 30px rgba(0, 255, 159, 0.3);
-  margin-top: -50px; /* Overlap nicely */
+  margin-top: 0; /* Fixed Overlap */
 
   span {
     color: ${colors.neonGreen};
@@ -110,7 +111,7 @@ const Name = styled(motion.h2)`
 const RoleTag = styled(motion.div)`
   font-family: var(--font-share-tech-mono);
   color: ${colors.neonCyan};
-  background: rgba(0, 0, 0, 0.8);
+  background: ${colors.cardBg};
   border: 1px solid ${colors.neonCyan};
   display: inline-block;
   padding: 0.5rem 1.5rem;
@@ -129,8 +130,8 @@ const HudPanel = styled(motion.div)`
   transform: translateY(-50%);
   width: 250px;
   padding: 1.5rem;
-  background: rgba(10, 10, 10, 0.6);
-  border-left: 2px solid ${colors.neonPurple};
+  background: var(--card-bg);
+  border-left: 2px solid var(--neon-purple);
   backdrop-filter: blur(5px);
   z-index: 10;
   display: flex;
@@ -167,11 +168,11 @@ const HudLabel = styled.h4`
 `;
 
 const HudValue = styled.p`
-  color: #fff;
+  color: var(--text-primary);
   font-family: var(--font-orbitron);
   font-size: 1.1rem;
   margin: 0;
-  text-shadow: 0 0 5px ${colors.neonPurple};
+  text-shadow: 0 0 5px var(--neon-purple);
 `;
 
 const CtaButton = styled(motion.a)`
@@ -253,7 +254,7 @@ const Hero = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 1, type: "spring" }}
         >
-          Frontend Engineer
+          Software Developer
         </RoleTag>
         <br />
         <CtaButton
@@ -304,7 +305,6 @@ const Hero = () => {
         </div>
         <div>
           <HudLabel>Render Engine</HudLabel>
-          <HudValue>Three.js / WebGL</HudValue>
         </div>
       </HudPanel>
     </HeroSection>

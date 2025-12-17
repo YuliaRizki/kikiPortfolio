@@ -8,7 +8,7 @@ export const colors = {
   cardBg: "var(--card-bg)",
 };
 
-  export const animations = {
+export const animations = {
   float: keyframes`
     0% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
@@ -60,9 +60,8 @@ export const colors = {
 
 // --- Mixins ---
 export const cyberGrid = css`
-  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: 40px 40px;
+  /* Grid removed as per user request */
+  background-image: none;
 `;
 
 export const glassEffect = css`

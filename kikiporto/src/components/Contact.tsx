@@ -8,15 +8,16 @@ import { colors, animations, cyberGrid } from "../styles/shared";
 const Section = styled.section`
   min-height: 100vh;
   position: relative;
-  background-color: ${colors.darkBg};
-  color: #fff;
+  background-color: transparent;
+  color: ${colors.neonCyan}; /* Or text-primary */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
   overflow: hidden;
 
-  ${cyberGrid}
+  /* Grid removed */
+  /* ${cyberGrid} */
 
   /* Dark Vignette */
   &::after {
@@ -35,16 +36,17 @@ const Section = styled.section`
   }
 
   @media (max-width: 768px) {
-    padding: 4rem 1rem;
+    padding: 3rem 1rem;
+    min-height: auto;
   }
 `;
 
 const CyberFormContainer = styled(motion.div)`
   width: 100%;
   max-width: 900px;
-  background: rgba(16, 20, 24, 0.6);
+  background: ${colors.cardBg};
   backdrop-filter: blur(15px);
-  border: 1px solid rgba(0, 243, 255, 0.2);
+  border: 1px solid ${colors.neonCyan};
   /* Cyber Shape */
   clip-path: polygon(
     20px 0,
@@ -59,27 +61,7 @@ const CyberFormContainer = styled(motion.div)`
   flex-direction: column;
   position: relative;
   z-index: 10;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-
-  /* Decorative Corner Lines */
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, ${colors.neonCyan} 2px, transparent 2px)
-        0 0 / 20px 20px no-repeat,
-      linear-gradient(${colors.neonCyan} 2px, transparent 2px) 0 0 / 20px 20px
-        no-repeat,
-      linear-gradient(90deg, ${colors.neonCyan} 2px, transparent 2px) 100% 100% /
-        20px 20px no-repeat,
-      linear-gradient(${colors.neonCyan} 2px, transparent 2px) 100% 100% / 20px
-        20px no-repeat;
-    pointer-events: none;
-    opacity: 0.5;
-  }
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
     padding: 2rem;
@@ -92,7 +74,7 @@ const Title = styled.h2`
   font-family: var(--font-orbitron);
   font-size: 3rem;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 
   /* Glitch Text Effect */
@@ -153,9 +135,9 @@ const Label = styled.label`
 const Input = styled.input`
   width: 100%;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--text-secondary);
   padding: 1rem 1.5rem;
-  color: #fff;
+  color: var(--text-primary);
   font-family: var(--font-share-tech-mono);
   font-size: 1rem;
   outline: none;
@@ -172,9 +154,9 @@ const Input = styled.input`
 const TextArea = styled.textarea`
   width: 100%;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--text-secondary);
   padding: 1rem 1.5rem;
-  color: #fff;
+  color: var(--text-primary);
   font-family: var(--font-share-tech-mono);
   font-size: 1rem;
   outline: none;
