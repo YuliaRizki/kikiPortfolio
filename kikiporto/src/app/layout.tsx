@@ -34,7 +34,7 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "Yulia Rizki | Frontend Engineer",
+  title: "Yulia Rizki | Software Engineer",
   description: "Cyberpunk Portfolio of Yulia Rizki",
 };
 

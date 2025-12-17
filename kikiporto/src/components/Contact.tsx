@@ -36,7 +36,7 @@ const Section = styled.section`
   }
 
   @media (max-width: 768px) {
-    padding: 3rem 1rem;
+    padding: 3rem 1rem 8rem 1rem; /* Added extra bottom padding to clear mobile navbar */
     min-height: auto;
   }
 `;
@@ -107,6 +107,7 @@ const Form = styled.form`
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 `;
 

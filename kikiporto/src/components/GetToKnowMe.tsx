@@ -352,7 +352,7 @@ const GetToKnowMe = () => {
             >
               <ScrambleText
                 text="Encrypting data... Hover to view."
-                hoverResult="Fun Fact: I can debug code in my sleep (literally) and I assume 90% of bugs are typos."
+                hoverResult="Fun Fact: My body is consists of Half Coffee and Half Code LoL."
                 reveal={false}
               />
             </div>
@@ -380,7 +380,6 @@ const GetToKnowMe = () => {
               zIndex: -1,
             }}
           >
-            AI_CORE
           </div>
         </AvatarContainer>
       </ContentWrapper>
