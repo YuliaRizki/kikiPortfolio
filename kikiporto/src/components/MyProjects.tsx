@@ -482,6 +482,15 @@ const ModalClose = styled.button`
 const projects = [
   {
     id: 1,
+    title: "Experience East Lombok",
+    description:
+      "Local Government Hospitality Website of East Lombok, Indonesia.",
+    tags: ["React", "AI", "Health"],
+    mediaType: "video",
+    src: "/screen.mp4",
+  },
+  {
+    id: 2,
     title: "MediLoop",
     description:
       "AI-driven health analysis platform delivering personalized medical and wellness recommendations.",
@@ -490,7 +499,7 @@ const projects = [
     thumbnails: ["/mediloopHome.jpg", "/mediloopHome1.jpg"],
   },
   {
-    id: 2,
+    id: 3,
     title: "Ivory Ella",
     description:
       "Premium e-commerce clothing line clone with dynamic galleries and seamless checkout.",
@@ -499,7 +508,7 @@ const projects = [
     src: "/ivoryEllaDemo.mp4",
   },
   {
-    id: 3,
+    id: 4,
     title: "AI-Interior",
     description:
       "Transform vacant spaces into designed rooms using Generative AI and Replicate API.",
