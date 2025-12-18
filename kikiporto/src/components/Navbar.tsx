@@ -123,7 +123,7 @@ const NavList = styled.ul`
     gap: 1.5rem; /* Add gap back since we have space now */
     height: 100%;
     width: 100%;
-    padding-right: 50px; /* Make room for the absolute toggle */
+    padding: 0 4.5rem; /* Add padding on both sides to clear the absolute tools (left) and audio (right) */
   }
 `;
 
@@ -391,7 +391,7 @@ const ToolsContainer = styled.div`
     padding-bottom: 0;
     flex-direction: row;
     position: absolute;
-    right: 1rem;
+    left: 1rem; /* Move to left to balance Audio Toggle on right */
     top: 50%;
     transform: translateY(-50%);
     z-index: 10000;
