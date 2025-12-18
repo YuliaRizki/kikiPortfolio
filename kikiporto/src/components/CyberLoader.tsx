@@ -68,30 +68,39 @@ const ScanLine = styled.div`
 
 const ContentWrapper = styled.div`
   width: 80%;
-  max-width: 400px;
+  max-width: 600px; /* Increased from 400px */
   position: relative;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    max-width: 300px;
+  }
 `;
 
 const TerminalText = styled.div`
   font-family: var(--font-share-tech-mono);
-  font-size: 1rem;
+  font-size: 1.25rem; /* Increased from 1rem */
   color: var(--text-primary);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   min-height: 1.5em;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
 
   span {
     color: ${colors.neonPurple};
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 12px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    letter-spacing: 2px;
   }
 `;
 
 const ProgressBarContainer = styled.div`
   width: 100%;
-  height: 4px;
+  height: 6px; /* Increased from 4px */
   background: #111;
   position: relative;
   overflow: hidden;
@@ -108,10 +117,15 @@ const ProgressBar = styled.div`
 const SystemStatus = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  font-size: 0.75rem;
+  margin-top: 12px;
+  font-size: 0.85rem; /* Increased from 0.75rem */
   color: var(--text-secondary);
   opacity: 0.8;
+  font-family: var(--font-share-tech-mono);
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
 `;
 
 // --- Component ---

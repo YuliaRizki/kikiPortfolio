@@ -22,8 +22,9 @@ const Section = styled.section`
   /* Vignette removed to let global background shine */
 
   @media (max-width: 768px) {
-    padding: 3rem 1rem 8rem 1rem; /* Added extra bottom padding to clear mobile navbar */
-    min-height: auto;
+    padding: 3rem 1rem 12rem 1rem; /* Significantly increased bottom padding */
+    min-height: 100vh; /* Ensure it takes full height so padding pushes content up */
+    align-items: flex-start; /* Allow scrolling to bottom */
   }
 `;
 
