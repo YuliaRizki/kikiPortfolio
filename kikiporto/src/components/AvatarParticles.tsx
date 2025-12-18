@@ -22,7 +22,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
     img.onload = () => {
       try {
         const canvas = document.createElement("canvas");
-        // Optimize: Reduced from 150 to 64 for significant perf boost
+        // User preferred settings
         const targetWidth = 64;
         const scale = targetWidth / img.width;
         canvas.width = targetWidth;
@@ -35,7 +35,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
         const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
         const points: number[] = [];
-        const threshold = 60;
+        const threshold = 60; // User preferred threshold
 
         for (let y = 0; y < canvas.height; y++) {
           for (let x = 0; x < canvas.width; x++) {
@@ -46,16 +46,20 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
             const brightness = (r + g + b) / 3;
 
             if (brightness > threshold) {
-              // Adjust scale to maintain visual size with lower resolution
-              // 0.09 was for 100px. For 64px, we need larger spacing multiplier.
-              // 100 * 0.09 = 9. 64 * 0.14 ~= 9.
               const pX = (x - canvas.width / 2) * 0.14;
               const pY = -(y - canvas.height / 2) * 0.14;
               const pZ = (Math.random() - 0.5) * 0.5;
 
-              points.push(pX, pY, pZ);
+              // Safety check to prevent crashes
+              if (!isNaN(pX) && !isNaN(pY) && !isNaN(pZ)) {
+                points.push(pX, pY, pZ);
+              }
             }
           }
+        }
+
+        if (points.length === 0) {
+          points.push(0, 0, 0); // Fallback point
         }
 
         setPositions(new Float32Array(points));
@@ -77,26 +81,22 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
   // Target opacity based on theme
   const targetOpacity = theme === "light" ? 1.0 : 0.8;
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (pointsRef.current) {
       const t = state.clock.getElapsedTime();
       pointsRef.current.rotation.y = Math.sin(t * 0.2) * 0.2;
       pointsRef.current.rotation.x = Math.sin(t * 0.1) * 0.1;
 
-      // Smooth fade-in
+      // Force opacity update to ensure visibility on initial load
       const material = pointsRef.current.material as THREE.PointsMaterial;
       if (material) {
-        material.opacity = THREE.MathUtils.lerp(
-          material.opacity,
-          targetOpacity,
-          delta * 4
-        );
+        material.opacity = targetOpacity;
+        material.needsUpdate = true;
       }
     }
   });
 
   if (loading || !positions) {
-    // Return a subtle placeholder instead of null to prevent layout shifts/empty space
     return (
       <mesh scale={0.5}>
         <sphereGeometry args={[1, 16, 16]} />
@@ -104,7 +104,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
           color={theme === "light" ? THEME_COLORS.light : THEME_COLORS.dark}
           wireframe
           transparent
-          opacity={0.1}
+          opacity={0} // Hidden while loading
         />
       </mesh>
     );
@@ -112,6 +112,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
 
   return (
     <Points
+      key={`${positions.length}-${theme}`}
       ref={pointsRef}
       positions={positions}
       stride={3}
@@ -123,10 +124,10 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
           theme === "light" ? THREE.NormalBlending : THREE.AdditiveBlending
         }
         color={theme === "light" ? THEME_COLORS.light : THEME_COLORS.dark}
-        size={theme === "light" ? 0.05 : 0.06} // Larger points for fewer count
+        size={theme === "light" ? 0.05 : 0.06}
         sizeAttenuation={true}
         depthWrite={false}
-        opacity={0.1} // Start visible, fade in via useFrame
+        opacity={targetOpacity} // Immediate visibility needed
       />
     </Points>
   );
