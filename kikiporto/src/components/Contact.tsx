@@ -196,9 +196,10 @@ const SubmitBtn = styled(motion.button)`
   margin-top: 1rem;
 
   &:hover {
-    background: #fff;
-    color: ${colors.neonCyan};
-    box-shadow: 0 0 20px ${colors.neonCyan}, 0 0 40px ${colors.neonCyan};
+    background: #ff0055; /* Neon Pink */
+    color: #fff;
+    border: 1px solid #ff0055;
+    box-shadow: 0 0 20px #ff0055, 0 0 40px #ff0055;
   }
 
   @media (max-width: 768px) {

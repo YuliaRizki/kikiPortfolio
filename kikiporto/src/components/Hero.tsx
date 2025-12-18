@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
 import { colors, animations } from "../styles/shared";
@@ -93,18 +93,85 @@ const ForegroundContent = styled.div`
   pointer-events: none; /* Let clicks pass to robot or buttons */
 `;
 
-const Name = styled(motion.h2)`
-  font-family: var(--font-orbitron);
-  font-size: clamp(2.5rem, 5vw, 5rem);
-  font-weight: 900;
-  font-weight: 900;
-  letter-spacing: 10px;
-  color: var(--text-primary);
-  text-shadow: 0 0 30px rgba(0, 255, 159, 0.3);
-  margin-top: 0; /* Fixed Overlap */
+// Baddie Cyberpunk Glitch Animation
+const glitchSkew = keyframes`
+  0% { transform: skew(0deg); }
+  20% { transform: skew(-20deg); }
+  40% { transform: skew(10deg); }
+  60% { transform: skew(-5deg); }
+  80% { transform: skew(5deg); }
+  100% { transform: skew(0deg); }
+`;
 
-  span {
-    color: ${colors.neonGreen};
+const glitchText = keyframes`
+  0% { clip-path: inset(80% 0 0 0); transform: translate(-2px, 2px); }
+  10% { clip-path: inset(10% 0 85% 0); transform: translate(2px, -2px); }
+  20% { clip-path: inset(80% 0 0 0); transform: translate(-2px, 2px); }
+  30% { clip-path: inset(10% 0 40% 0); transform: translate(2px, -2px); }
+  40% { clip-path: inset(40% 0 43% 0); transform: translate(-2px, 2px); }
+  50% { clip-path: inset(5% 0 90% 0); transform: translate(2px, -2px); }
+  60% { clip-path: inset(80% 0 10% 0); transform: translate(-2px, 2px); }
+  70% { clip-path: inset(10% 0 80% 0); transform: translate(2px, -2px); }
+  80% { clip-path: inset(40% 0 10% 0); transform: translate(-2px, 2px); }
+  90% { clip-path: inset(50% 0 30% 0); transform: translate(2px, -2px); }
+  100% { clip-path: inset(80% 0 0 0); transform: translate(0); }
+`;
+
+const CyberGlitchTitle = styled(motion.div)`
+  font-family: var(--font-orbitron);
+  font-size: clamp(4rem, 8vw, 8rem);
+  font-weight: 900;
+  line-height: 1;
+  position: relative;
+  color: #fff;
+  letter-spacing: 5px;
+  z-index: 10;
+  margin-bottom: 1rem;
+
+  /* The "Baddie" Stroke Look */
+  -webkit-text-stroke: 2px ${colors.neonCyan};
+  color: transparent; /* Hollow text */
+
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* No background */
+    overflow: hidden;
+  }
+
+  /* Layer 1: The Cyan Glitch */
+  &::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff0055;
+    animation: ${glitchText} 2s infinite linear alternate-reverse;
+    border-radius: 5px;
+    opacity: 0.7;
+    clip-path: inset(20% 0 80% 0);
+  }
+
+  /* Layer 2: The Pink Glitch */
+  &::after {
+    left: -2px;
+    text-shadow: -2px 0 ${colors.neonCyan};
+    animation: ${glitchText} 3s infinite linear alternate-reverse;
+    animation-delay: 1s;
+    border-radius: 5px;
+    opacity: 0.7;
+    clip-path: inset(80% 0 2% 0);
+  }
+
+  /* Main text flicker */
+  animation: ${glitchSkew} 5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+  &:hover {
+    color: #fff; /* Fill on hover */
+    -webkit-text-stroke: 0px;
+    text-shadow: 0 0 20px ${colors.neonCyan}, 0 0 40px #ff0055;
   }
 `;
 
@@ -191,9 +258,10 @@ const CtaButton = styled(motion.a)`
   transition: all 0.3s;
 
   &:hover {
-    background: ${colors.neonCyan};
-    color: #000;
-    box-shadow: 0 0 30px ${colors.neonCyan};
+    background: #ff0055; /* Neon Pink */
+    color: #fff;
+    border-color: #ff0055;
+    box-shadow: 0 0 30px #ff0055, 0 0 60px #ff0055;
   }
 `;
 
@@ -242,13 +310,14 @@ const Hero = () => {
 
       {/* Main Foreground Text */}
       <ForegroundContent>
-        <Name
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
+        <CyberGlitchTitle
+          data-text="KIKI YULIA"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
         >
-          KIKI <span>YULIA</span>
-        </Name>
+          KIKI YULIA
+        </CyberGlitchTitle>
         <RoleTag
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

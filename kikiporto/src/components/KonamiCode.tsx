@@ -71,9 +71,9 @@ const FilterOverlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  z-index: 999; /* Lowered from 9999 to allow important modals, but still high for overlay effect */
   pointer-events: none;
-  backdrop-filter: contrast(1.5) saturate(1.5); /* Extreme Brutalist Filter */
+  backdrop-filter: contrast(1.2) saturate(1.2); /* Slightly toned down filter */
   mix-blend-mode: overlay;
 `;
 
@@ -83,10 +83,10 @@ const MatrixCanvas = styled.canvas`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9998;
+  z-index: 0; /* Background level */
   pointer-events: none;
-  opacity: 0.25; /* Increased opacity */
-  filter: hue-rotate(-110deg); /* Shift Green to Red/Orange */
+  opacity: 0.6; /* Increased opacity for visibility */
+  filter: hue-rotate(-110deg) brightness(1.5); /* Boost brightness */
 `;
 
 const MatrixRain = () => {

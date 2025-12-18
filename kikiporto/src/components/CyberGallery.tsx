@@ -45,7 +45,7 @@ const Header = styled.div`
   padding: 0 1rem;
 
   @media (max-width: 768px) {
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
   }
 `;
 
@@ -224,6 +224,10 @@ const SwipeHint = styled.div`
 const IntroText = styled.div`
   text-align: center;
   margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 0.5rem;
+  }
   font-family: var(--font-share-tech-mono);
   color: ${colors.neonGreen};
   font-size: 1.2rem;
@@ -234,6 +238,37 @@ const IntroText = styled.div`
     color: #000;
     padding: 2px 8px;
     margin-right: 10px;
+  }
+`;
+
+const SwipeWrapper = styled(motion.div)`
+  perspective: 1200px;
+  width: 100%;
+  height: 600px;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  @media (max-width: 768px) {
+    height: 400px; /* Reduced height to remove unused space */
+    padding-bottom: 2rem;
+  }
+`;
+
+const SwipeHintContainer = styled.div`
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    margin-top: -2rem;
   }
 `;
 
@@ -295,29 +330,27 @@ const CyberGallery = () => {
       </IntroText>
 
       {/* Swipe Area */}
-      <motion.div
+      <SwipeWrapper
         onMouseEnter={() => setAutoplay(false)}
         onMouseLeave={() => setAutoplay(true)}
         onPan={(event, info) => {
           // Manually update rotation based on pan delta
           const current = rotation.get();
-          rotation.set(current + info.delta.x * 0.5); // increased sensitivity
+          rotation.set(current + info.delta.x * 0.6); // Slightly improved sensitivity
+        }}
+        onWheel={(e) => {
+          // Allow trackpad horizontal scrolling to rotate carousel
+          // Check if scrolling horizontally largely
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            const current = rotation.get();
+            // Invert deltaX for natural feel (swipe left to move right) or standard (swipe left to move left)
+            // Usually e.deltaX > 0 means scrolling right.
+            rotation.set(current - e.deltaX * 0.5);
+          }
         }}
         onPanStart={() => setAutoplay(false)}
         onPanEnd={() => setAutoplay(true)}
-        style={{
-          perspective: "1200px",
-          width: "100%",
-          height: "600px",
-          position: "relative",
-          cursor: "grab",
-          touchAction: "none", // Critical: prevents browser scrolling while dragging
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 10,
-        }}
-        whileTap={{ cursor: "grabbing" }}
       >
         <CarouselContainer style={{ pointerEvents: "none" }}>
           {" "}
@@ -386,11 +419,11 @@ const CyberGallery = () => {
             </CarouselTrack>
           </div>
         </CarouselContainer>
-      </motion.div>
+      </SwipeWrapper>
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <SwipeHintContainer>
         <SwipeHint>SCROLL / DRAG_TO_NAVIGATE</SwipeHint>
-      </div>
+      </SwipeHintContainer>
     </Section>
   );
 };

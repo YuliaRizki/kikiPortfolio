@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Points, PointMaterial } from "@react-three/drei";
+import {
+  Points,
+  PointMaterial,
+  OrbitControls,
+  useTexture,
+} from "@react-three/drei";
+import * as THREE from "three";
 import * as random from "maath/random/dist/maath-random.esm";
 import { colors, animations, cyberGrid } from "../styles/shared";
 
@@ -179,6 +185,43 @@ function ParticleCloud() {
           opacity={0.8}
         />
       </Points>
+    </group>
+  );
+}
+
+// --- Holo Relief Cat (3D Extruded) ---
+function HoloReliefCat({ url }: { url: string }) {
+  const texture = useTexture(url);
+  const meshRef = useRef<any>(null!);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      const t = state.clock.getElapsedTime();
+      meshRef.current.rotation.y = Math.sin(t * 0.5) * 0.05; // Very subtle rotation
+      meshRef.current.position.y = Math.sin(t * 1.5) * 0.1; // Float
+    }
+  });
+
+  return (
+    <group scale={2.5}>
+      {/* 3D Displaced Mesh */}
+      <mesh ref={meshRef}>
+        {/* High segment plane for smooth displacement */}
+        <planeGeometry args={[2, 2, 200, 200]} />
+        <meshStandardMaterial
+          color="#000000"
+          emissive="#ffffff"
+          emissiveMap={texture}
+          emissiveIntensity={2}
+          displacementMap={texture}
+          displacementScale={0.15} // Reduced to avoid spikes
+          alphaMap={texture} // Ensure clean cutout
+          transparent
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
     </group>
   );
 }
@@ -360,9 +403,17 @@ const GetToKnowMe = () => {
         </TextContainer>
 
         <AvatarContainer>
-          {/* 3D Canvas for Holographic Head/Cloud */}
-          <Canvas camera={{ position: [0, 0, 1] }}>
+          <Canvas camera={{ position: [0, 0, 4] }}>
             <ParticleCloud />
+            <HoloReliefCat url="/cyber_cat.png" />
+            <OrbitControls
+              enableZoom={false}
+              enablePan={false}
+              minAzimuthAngle={-0.5}
+              maxAzimuthAngle={0.5}
+              minPolarAngle={Math.PI / 2 - 0.1}
+              maxPolarAngle={Math.PI / 2 + 0.1}
+            />
           </Canvas>
 
           {/* Absolute positioned overlay text or decorative elements can go here */}
@@ -379,8 +430,7 @@ const GetToKnowMe = () => {
               pointerEvents: "none",
               zIndex: -1,
             }}
-          >
-          </div>
+          ></div>
         </AvatarContainer>
       </ContentWrapper>
     </Section>

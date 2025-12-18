@@ -158,6 +158,8 @@ body {
 .content-wrapper {
   width: 100%;
   transition: padding-left 0.3s ease;
+  position: relative;
+  z-index: 10; /* Ensure content sits above Matrix Background (z-0) */
 }
 * {
   cursor: none !important;
