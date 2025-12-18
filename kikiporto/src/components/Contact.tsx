@@ -67,6 +67,11 @@ const Title = styled.h2`
   position: relative;
   display: inline-block;
 
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+    word-break: break-word; /* Prevent overflow if word is too long */
+  }
+
   span {
     color: ${colors.neonCyan};
     text-shadow: 0 0 15px ${colors.neonCyan};
