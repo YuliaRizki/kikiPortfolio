@@ -77,11 +77,24 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
     img.src = url;
   }, [url]);
 
-  useFrame((state) => {
+  // Target opacity based on theme
+  const targetOpacity = theme === "light" ? 1.0 : 0.8;
+
+  useFrame((state, delta) => {
     if (pointsRef.current) {
       const t = state.clock.getElapsedTime();
       pointsRef.current.rotation.y = Math.sin(t * 0.2) * 0.2;
       pointsRef.current.rotation.x = Math.sin(t * 0.1) * 0.1;
+
+      // Smooth fade-in
+      const material = pointsRef.current.material as THREE.PointsMaterial;
+      if (material) {
+        material.opacity = THREE.MathUtils.lerp(
+          material.opacity,
+          targetOpacity,
+          delta * 2
+        );
+      }
     }
   });
 
@@ -116,7 +129,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
         size={theme === "light" ? 0.05 : 0.06} // Larger points for fewer count
         sizeAttenuation={true}
         depthWrite={false}
-        opacity={theme === "light" ? 1.0 : 0.8}
+        opacity={0} // Start invisible, fade in via useFrame
       />
     </Points>
   );
