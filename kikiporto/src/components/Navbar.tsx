@@ -242,6 +242,35 @@ const FooterDecor = styled.div`
   align-items: center;
   gap: 5px;
   opacity: 0.5;
+  cursor: help;
+  position: relative;
+  transition: opacity 0.3s;
+
+  &:hover {
+    opacity: 1;
+
+    .text {
+      color: #ff0055;
+      text-shadow: 0 0 5px #ff0055;
+    }
+
+    &::after {
+      content: "TAP_X2_TO_OVERRIDE";
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #000;
+      color: #ff0055;
+      border: 1px solid #ff0055;
+      padding: 5px 10px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      margin-left: 10px;
+      z-index: 10000;
+      animation: fadeIn 0.3s ease;
+    }
+  }
 
   .line {
     width: 2px;
@@ -256,6 +285,7 @@ const FooterDecor = styled.div`
     color: #00f3ff;
     letter-spacing: 2px;
     font-family: var(--font-orbitron);
+    transition: color 0.3s;
   }
 
   @media (max-width: 768px) {

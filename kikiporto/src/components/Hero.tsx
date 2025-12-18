@@ -27,17 +27,7 @@ const HeroSection = styled.section`
   /* Grid removed */
   background-image: none;
 
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at 50% 50%,
-      transparent 0%,
-      var(--bg-primary) 90%
-    );
-    pointer-events: none;
-  }
+  /* Vignette removed for consistent global background */
 `;
 
 const BackgroundTitle = styled(motion.h1)`

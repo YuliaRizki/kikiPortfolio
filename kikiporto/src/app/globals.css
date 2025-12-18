@@ -16,6 +16,14 @@
   --card-bg: rgba(15, 18, 25, 0.85); /* Dark Navy opacity */
   --grid-color: rgba(220, 255, 255, 0.05); /* Subtle white trace */
   --card-radius: 2px;
+
+  /* Body Background - Dark Mode (Cyber Spotlight) */
+  --body-bg-image: radial-gradient(
+    circle at 50% 100%,
+    #050a14 0%,
+    var(--bg-primary) 60%,
+    var(--bg-primary) 100%
+  );
 }
 
 [data-theme="light"] {
@@ -28,18 +36,24 @@
   --neon-purple: #6b4c9a; /* Deep Purple */
   --neon-green: #4f8a10; /* Darker Green */
 
-  --card-bg: rgba(255, 255, 255, 0.85); /* Sticker-like opacity */
-  --grid-color: rgba(26, 26, 26, 0.08); /* Dark grid lines */
+  --card-bg: rgba(255, 255, 255, 0.65); /* More transparent to show gradient */
+  --grid-color: rgba(0, 168, 204, 0.1); /* Cyan grid lines */
   --card-radius: 12px;
+
+  /* Body Background - Light Mode (Creamy Holographic) */
+  /* Matches user screenshot: Warm base with soft cyber iridescence */
+  --body-bg-image: linear-gradient(
+    135deg,
+    #fdf6e3 0%,
+    #e0f7fa 40%,
+    /* Pale Cyan */ #f3e8ff 60%,
+    /* Pale Purple */ #fdf6e3 100%
+  );
 }
 
 body {
-  background: radial-gradient(
-    circle at 50% 100%,
-    #050a14 0%,
-    var(--bg-primary) 60%,
-    var(--bg-primary) 100%
-  );
+  background-color: var(--bg-primary);
+  background-image: var(--body-bg-image);
   background-attachment: fixed;
   color: var(--text-primary);
   transition: background 0.3s ease, color 0.3s ease;
@@ -137,7 +151,11 @@ body {
   mix-blend-mode: screen;
 }
 [data-theme="light"] .glow-effect {
-  background: radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 168, 204, 0.15) 0%,
+    /* Cool Cyan Blue */ transparent 70%
+  );
   mix-blend-mode: multiply;
 }
 .hologram-background {

@@ -15,21 +15,7 @@ const Section = styled.section`
   /* Grid removed */
   /* ${cyberGrid} */
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-      circle at 50% 50%,
-      transparent 0%,
-      rgba(0, 0, 0, 0.8) 100%
-    );
-    pointer-events: none;
-  }
-
+  /* Vignette removed for consistent global background */
   @media (max-width: 768px) {
     padding: 3rem 1rem;
     min-height: auto;

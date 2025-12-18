@@ -404,8 +404,10 @@ const GetToKnowMe = () => {
 
         <AvatarContainer>
           <Canvas camera={{ position: [0, 0, 4] }}>
-            <ParticleCloud />
-            <HoloReliefCat url="/cyber_cat.png" />
+            <React.Suspense fallback={null}>
+              <ParticleCloud />
+              <HoloReliefCat url="/cyber_cat.png" />
+            </React.Suspense>
             <OrbitControls
               enableZoom={false}
               enablePan={false}

@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { colors } from "../styles/shared";
 import CyberEarth from "./CyberEarth";
+import { GodModeHUD } from "./GodModeHUD";
+import { motion, AnimatePresence } from "framer-motion";
 
 const glitchAnim = keyframes`
   0% { transform: translate(0); }
@@ -25,43 +27,91 @@ const MessageOverlay = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: "Courier New", monospace;
-  font-size: 3rem;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.85);
-  color: var(--neon-cyan);
+  background: #000;
+  /* Brutalist raw border */
+  border: 1.5rem solid #ff0055;
 
-  h1 {
-    font-family: "Impact", "Anton", sans-serif;
-    text-transform: uppercase;
-    font-size: 5rem;
-    letter-spacing: 10px;
-    border: 6px solid var(--neon-cyan); /* Theme color */
-    padding: 20px 40px;
+  /* Grid pattern overlay */
+  background-image: linear-gradient(#00f3ff 1px, transparent 1px),
+    linear-gradient(90deg, #00f3ff 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+
+  /* Hard vignette */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 40%, #000 100%);
+    pointer-events: none;
+  }
+`;
+
+const BrutalTitle = styled.h1`
+  font-family: "Impact", "Anton", sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(4rem, 15vw, 12rem);
+  line-height: 0.85;
+  color: #000;
+  background: #ff0055;
+  padding: 1rem 4rem;
+  transform: skew(-10deg);
+  position: relative;
+  z-index: 10;
+  /* Hard shadow */
+  box-shadow: 1.5rem 1.5rem 0px #00f3ff;
+
+  animation: ${glitchAnim} 0.25s infinite steps(2);
+  mix-blend-mode: normal;
+
+  &::before {
+    content: "WARNING // UNRESTRICTED ACCESS";
+    position: absolute;
+    top: -2rem;
+    left: 0;
+    font-size: 1rem;
+    color: #ff0055;
     background: #000;
-    text-shadow: 4px 4px 0 var(--neon-purple);
-    animation: ${glitchAnim} 0.2s infinite;
-    text-align: center;
-
-    @media (max-width: 768px) {
-      font-size: 2rem;
-      padding: 10px 20px;
-      letter-spacing: 4px;
-      border-width: 3px;
-    }
+    padding: 0.2rem 1rem;
+    transform: skew(10deg);
+    font-family: var(--font-share-tech-mono);
+    letter-spacing: 2px;
   }
 
-  p {
-    font-family: "Fira Code", monospace;
-    font-size: 1.5rem;
-    color: #fff;
-    margin-top: 2rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    background: var(--neon-purple);
-    color: #000;
-    padding: 5px 10px;
-    font-weight: bold;
+  @media (max-width: 768px) {
+    padding: 1rem 2rem;
+    box-shadow: 10px 10px 0px #00f3ff;
+  }
+`;
+
+const BrutalSub = styled.div`
+  margin-top: 4rem;
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  color: #ff0055;
+  background: #000;
+  border: 2px solid #ff0055;
+  padding: 1rem 3rem;
+  z-index: 10;
+  letter-spacing: 0.5rem;
+  position: relative;
+
+  /* Decorative crosshairs */
+  &::before,
+  &::after {
+    content: "+";
+    position: absolute;
+    color: #00f3ff;
+    font-size: 2rem;
+  }
+  &::before {
+    top: -1.5rem;
+    left: -1.5rem;
+  }
+  &::after {
+    bottom: -1.5rem;
+    right: -1.5rem;
   }
 `;
 
@@ -71,9 +121,9 @@ const FilterOverlay = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 999; /* Lowered from 9999 to allow important modals, but still high for overlay effect */
+  z-index: 999;
   pointer-events: none;
-  backdrop-filter: contrast(1.2) saturate(1.2); /* Slightly toned down filter */
+  backdrop-filter: contrast(1.2) saturate(1.2);
   mix-blend-mode: overlay;
 `;
 
@@ -83,10 +133,21 @@ const MatrixCanvas = styled.canvas`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* Background level */
+  z-index: 0;
   pointer-events: none;
-  opacity: 0.6; /* Increased opacity for visibility */
-  filter: hue-rotate(-110deg) brightness(1.5); /* Boost brightness */
+  opacity: 0.6;
+  filter: hue-rotate(-110deg) brightness(1.5);
+`;
+
+const Ripple = styled(motion.div)`
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ff0055; /* Default rejection color */
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
 `;
 
 const MatrixRain = () => {
@@ -119,7 +180,7 @@ const MatrixRain = () => {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#0F0"; // Green text base (will be shifted by CSS filter)
+      ctx.fillStyle = "#0F0";
       ctx.font = fontSize + "px monospace";
 
       for (let i = 0; i < rainDrops.length; i++) {
@@ -156,6 +217,10 @@ const KonamiCode = () => {
   const [input, setInput] = useState<string[]>([]);
   const [godMode, setGodMode] = useState(false);
   const [showMsg, setShowMsg] = useState(false);
+  const [tapCount, setTapCount] = useState(0);
+  const [ripples, setRipples] = useState<
+    { x: number; y: number; id: number }[]
+  >([]);
 
   // Konami Code Sequence: Up, Up, Down, Down, Left, Right, Left, Right, B, A
   const sequence = [
@@ -182,7 +247,7 @@ const KonamiCode = () => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = i % 2 === 0 ? "square" : "sawtooth";
-        osc.frequency.value = 440 * Math.pow(2, (i / 12) * 7); // Pentatonic-ish climb
+        osc.frequency.value = 440 * Math.pow(2, (i / 12) * 7);
 
         gain.gain.setValueAtTime(0.1, ctx.currentTime + delay);
         gain.gain.exponentialRampToValueAtTime(
@@ -206,7 +271,7 @@ const KonamiCode = () => {
       playSound();
       setGodMode(true);
       setShowMsg(true);
-      setTimeout(() => setShowMsg(false), 3000); // 3 seconds message
+      setTimeout(() => setShowMsg(false), 3000);
     }
   };
 
@@ -228,20 +293,23 @@ const KonamiCode = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [godMode]); // Added godMode dependency for safety
-
-  // --- Mobile/Desktop Trigger (2 Taps) ---
-  const [tapCount, setTapCount] = useState(0);
+  }, [godMode]);
 
   useEffect(() => {
-    // Reset tap count if no second tap happens quickly
     const timer = setTimeout(() => setTapCount(0), 300);
     return () => clearTimeout(timer);
   }, [tapCount]);
 
+  const addRipple = (x: number, y: number) => {
+    const id = Date.now();
+    setRipples((prev) => [...prev, { x, y, id }]);
+    setTimeout(() => {
+      setRipples((prev) => prev.filter((r) => r.id !== id));
+    }, 1000);
+  };
+
   useEffect(() => {
-    const handleTap = (e: Event) => {
-      // Ignore if clicking on interactive elements
+    const handleTap = (e: MouseEvent) => {
       if (
         (e.target as HTMLElement).tagName === "BUTTON" ||
         (e.target as HTMLElement).tagName === "A"
@@ -249,23 +317,24 @@ const KonamiCode = () => {
         return;
       }
 
+      addRipple(e.clientX, e.clientY);
+
       setTapCount((prev) => {
         const newCount = prev + 1;
         if (newCount === 2) {
           activateGodMode();
-          return 0; // Reset after activation
+          return 0;
         }
         return newCount;
       });
     };
 
-    // Attach to click event for broad compatibility (mobile + desktop)
-    window.addEventListener("click", handleTap);
+    window.addEventListener("click", handleTap as any);
 
     return () => {
-      window.removeEventListener("click", handleTap);
+      window.removeEventListener("click", handleTap as any);
     };
-  }, [godMode]); // Added godMode dependency to ensure latest state access if needed
+  }, [godMode]);
 
   // God Mode Class Injector
   useEffect(() => {
@@ -278,18 +347,38 @@ const KonamiCode = () => {
 
   return (
     <>
+      {/* Click Hint Ripples */}
+      <AnimatePresence>
+        {ripples.map((r) => (
+          <Ripple
+            key={r.id}
+            initial={{
+              opacity: 1,
+              scale: 0.5,
+              left: r.x,
+              top: r.y,
+              borderColor: "#ff0055",
+            }}
+            animate={{ opacity: 0, scale: 2 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+          />
+        ))}
+      </AnimatePresence>
+
       {godMode && (
         <>
           <FilterOverlay />
           <MatrixRain />
           <CyberEarth />
+          <GodModeHUD />
         </>
       )}
 
       {showMsg && (
         <MessageOverlay>
-          <h1>GOD MODE ACTIVATED</h1>
-          <p>ROOT_ACCESS_GRANTED</p>
+          <BrutalTitle>GOD MODE</BrutalTitle>
+          <BrutalSub>SYSTEM_OVERRIDE</BrutalSub>
         </MessageOverlay>
       )}
     </>

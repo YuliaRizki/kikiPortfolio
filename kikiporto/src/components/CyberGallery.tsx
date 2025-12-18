@@ -18,18 +18,7 @@ const Section = styled.section`
   padding: 8rem 1rem;
   perspective: 1000px;
 
-  /* Vignette */
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at center,
-      transparent 0%,
-      ${colors.darkBg} 90%
-    );
-    pointer-events: none;
-  }
+  /* Vignette removed to let global background shine */
 
   @media (max-width: 768px) {
     padding: 3rem 1rem;

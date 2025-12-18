@@ -19,21 +19,7 @@ const Section = styled.section`
   /* Grid removed */
   /* ${cyberGrid} */
 
-  /* Dark Vignette */
-  &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-      circle at center,
-      transparent 0%,
-      var(--bg-primary) 90%
-    );
-    pointer-events: none;
-  }
+  /* Vignette removed to let global background shine */
 
   @media (max-width: 768px) {
     padding: 3rem 1rem 8rem 1rem; /* Added extra bottom padding to clear mobile navbar */
