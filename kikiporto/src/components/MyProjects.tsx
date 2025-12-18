@@ -485,7 +485,7 @@ const projects = [
     title: "Experience East Lombok",
     description:
       "Local Government Hospitality Website of East Lombok, Indonesia.",
-    tags: ["React", "AI", "Health"],
+    tags: ["Nextjs", "Tailwind", "TypeScript", "Tourism"],
     mediaType: "video",
     src: "/screen.mp4",
   },
