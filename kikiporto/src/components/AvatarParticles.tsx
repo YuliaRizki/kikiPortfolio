@@ -24,8 +24,8 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
       setTimeout(() => {
         try {
           const canvas = document.createElement("canvas");
-          // Optimize: Reduced from 150 to 100 for significant perf boost (~50% fewer pixels)
-          const targetWidth = 100;
+          // Optimize: Reduced from 150 to 64 for significant perf boost
+          const targetWidth = 64;
           const scale = targetWidth / img.width;
           canvas.width = targetWidth;
           canvas.height = Math.floor(canvas.width * (img.height / img.width));
@@ -37,7 +37,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
           const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
           const points: number[] = [];
-          const threshold = 60; // Slightly higher threshold to reduce noise
+          const threshold = 60;
 
           for (let y = 0; y < canvas.height; y++) {
             for (let x = 0; x < canvas.width; x++) {
@@ -49,9 +49,10 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
 
               if (brightness > threshold) {
                 // Adjust scale to maintain visual size with lower resolution
-                // 0.06 * (150/100) = 0.09 approx to match previous physical size
-                const pX = (x - canvas.width / 2) * 0.09;
-                const pY = -(y - canvas.height / 2) * 0.09;
+                // 0.09 was for 100px. For 64px, we need larger spacing multiplier.
+                // 100 * 0.09 = 9. 64 * 0.14 ~= 9.
+                const pX = (x - canvas.width / 2) * 0.14;
+                const pY = -(y - canvas.height / 2) * 0.14;
                 const pZ = (Math.random() - 0.5) * 0.5;
 
                 points.push(pX, pY, pZ);
@@ -112,7 +113,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
           theme === "light" ? THREE.NormalBlending : THREE.AdditiveBlending
         }
         color={theme === "light" ? THEME_COLORS.light : THEME_COLORS.dark}
-        size={theme === "light" ? 0.035 : 0.04} // Slightly larger to compensate for fewer particles
+        size={theme === "light" ? 0.05 : 0.06} // Larger points for fewer count
         sizeAttenuation={true}
         depthWrite={false}
         opacity={theme === "light" ? 1.0 : 0.8}

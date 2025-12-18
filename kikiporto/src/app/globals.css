@@ -9,17 +9,13 @@
   --text-primary: #ffffff; /* Pure White */
   --text-secondary: #a8b2d1; /* Cool Grey Blue */
 
-  --neon-cyan: #ff003c; /* Katana Red */
-  --neon-purple: #ffffff; /* Brush White */
-  --neon-green: #00f3ff; /* Hologram Cyan (Secondary) */
+  --neon-cyan: #dffffa; /* Ice White / Pale Neon */
+  --neon-purple: #ffffff; /* Pure White Accent */
+  --neon-green: #aeeeff; /* Soft Blue-Green */
 
   --card-bg: rgba(15, 18, 25, 0.85); /* Dark Navy opacity */
-  --grid-color: rgba(255, 0, 60, 0.05); /* Very subtle red trace */
+  --grid-color: rgba(220, 255, 255, 0.05); /* Subtle white trace */
   --card-radius: 2px;
-
-  /* Font Remapping - Reverted */
-  /* --font-orbitron: var(--font-orbitron); */
-  /* --font-share-tech-mono: var(--font-share-tech-mono); */
 }
 
 [data-theme="light"] {
@@ -28,9 +24,9 @@
   --text-primary: #1a1a1a; /* Sharp Black */
   --text-secondary: #4a4a4a; /* Dark Grey */
 
-  --neon-cyan: #ff5d8f; /* Industrial Pink (Nuclear Fusion text) */
-  --neon-purple: #8e85a0; /* Muted Lavender (RVB card) */
-  --neon-green: #9ca664; /* Tactical Olive (Modular circle) */
+  --neon-cyan: #00a8cc; /* Darker Cyan for visibility */
+  --neon-purple: #6b4c9a; /* Deep Purple */
+  --neon-green: #4f8a10; /* Darker Green */
 
   --card-bg: rgba(255, 255, 255, 0.85); /* Sticker-like opacity */
   --grid-color: rgba(26, 26, 26, 0.08); /* Dark grid lines */
@@ -40,7 +36,7 @@
 body {
   background: radial-gradient(
     circle at 50% 100%,
-    #5c0a0a 0%,
+    #050a14 0%,
     var(--bg-primary) 60%,
     var(--bg-primary) 100%
   );
