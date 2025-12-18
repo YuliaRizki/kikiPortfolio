@@ -22,9 +22,10 @@ const Section = styled.section`
   /* Vignette removed to let global background shine */
 
   @media (max-width: 768px) {
-    padding: 3rem 1rem 12rem 1rem; /* Significantly increased bottom padding */
-    min-height: 100vh; /* Ensure it takes full height so padding pushes content up */
-    align-items: flex-start; /* Allow scrolling to bottom */
+    flex-direction: column;
+    padding: 2rem 1rem 8rem 1rem;
+    min-height: auto; /* Remove 100vh constraint on mobile to let it flow naturally */
+    justify-content: flex-end; /* Push content up if possible, or let it flow */
   }
 `;
 
@@ -54,6 +55,7 @@ const CyberFormContainer = styled(motion.div)`
     padding: 1.5rem;
     clip-path: none;
     border-radius: 12px;
+    margin-bottom: 6rem; /* Explicit spacing from the bottom */
   }
 `;
 
