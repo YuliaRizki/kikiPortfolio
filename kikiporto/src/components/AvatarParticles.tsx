@@ -20,53 +20,50 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
     const img = new Image();
 
     img.onload = () => {
-      // Small delay to ensure we don't block the very first frame of a re-render
-      setTimeout(() => {
-        try {
-          const canvas = document.createElement("canvas");
-          // Optimize: Reduced from 150 to 64 for significant perf boost
-          const targetWidth = 64;
-          const scale = targetWidth / img.width;
-          canvas.width = targetWidth;
-          canvas.height = Math.floor(canvas.width * (img.height / img.width));
+      try {
+        const canvas = document.createElement("canvas");
+        // Optimize: Reduced from 150 to 64 for significant perf boost
+        const targetWidth = 64;
+        const scale = targetWidth / img.width;
+        canvas.width = targetWidth;
+        canvas.height = Math.floor(canvas.width * (img.height / img.width));
 
-          const ctx = canvas.getContext("2d");
-          if (!ctx) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
 
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
-          const points: number[] = [];
-          const threshold = 60;
+        const points: number[] = [];
+        const threshold = 60;
 
-          for (let y = 0; y < canvas.height; y++) {
-            for (let x = 0; x < canvas.width; x++) {
-              const i = (y * canvas.width + x) * 4;
-              const r = data[i];
-              const g = data[i + 1];
-              const b = data[i + 2];
-              const brightness = (r + g + b) / 3;
+        for (let y = 0; y < canvas.height; y++) {
+          for (let x = 0; x < canvas.width; x++) {
+            const i = (y * canvas.width + x) * 4;
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const brightness = (r + g + b) / 3;
 
-              if (brightness > threshold) {
-                // Adjust scale to maintain visual size with lower resolution
-                // 0.09 was for 100px. For 64px, we need larger spacing multiplier.
-                // 100 * 0.09 = 9. 64 * 0.14 ~= 9.
-                const pX = (x - canvas.width / 2) * 0.14;
-                const pY = -(y - canvas.height / 2) * 0.14;
-                const pZ = (Math.random() - 0.5) * 0.5;
+            if (brightness > threshold) {
+              // Adjust scale to maintain visual size with lower resolution
+              // 0.09 was for 100px. For 64px, we need larger spacing multiplier.
+              // 100 * 0.09 = 9. 64 * 0.14 ~= 9.
+              const pX = (x - canvas.width / 2) * 0.14;
+              const pY = -(y - canvas.height / 2) * 0.14;
+              const pZ = (Math.random() - 0.5) * 0.5;
 
-                points.push(pX, pY, pZ);
-              }
+              points.push(pX, pY, pZ);
             }
           }
-
-          setPositions(new Float32Array(points));
-          setLoading(false);
-        } catch (err) {
-          console.error("Error processing avatar particles:", err);
-          setLoading(false);
         }
-      }, 0);
+
+        setPositions(new Float32Array(points));
+        setLoading(false);
+      } catch (err) {
+        console.error("Error processing avatar particles:", err);
+        setLoading(false);
+      }
     };
 
     img.onerror = (err) => {
@@ -92,7 +89,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
         material.opacity = THREE.MathUtils.lerp(
           material.opacity,
           targetOpacity,
-          delta * 2
+          delta * 4
         );
       }
     }
@@ -129,7 +126,7 @@ function ImageParticles({ url, theme }: { url: string; theme: string }) {
         size={theme === "light" ? 0.05 : 0.06} // Larger points for fewer count
         sizeAttenuation={true}
         depthWrite={false}
-        opacity={0} // Start invisible, fade in via useFrame
+        opacity={0.1} // Start visible, fade in via useFrame
       />
     </Points>
   );

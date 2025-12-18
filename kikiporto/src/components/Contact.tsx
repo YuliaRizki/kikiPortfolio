@@ -50,7 +50,7 @@ const CyberFormContainer = styled(motion.div)`
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
-    padding: 2rem;
+    padding: 1.5rem;
     clip-path: none;
     border-radius: 12px;
   }
@@ -68,7 +68,7 @@ const Title = styled.h2`
   display: inline-block;
 
   @media (max-width: 768px) {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     word-break: break-word; /* Prevent overflow if word is too long */
   }
 
@@ -195,6 +195,9 @@ const SubmitBtn = styled(motion.button)`
 
   @media (max-width: 768px) {
     grid-column: span 1;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    padding: 1rem 0.5rem;
   }
 `;
 
