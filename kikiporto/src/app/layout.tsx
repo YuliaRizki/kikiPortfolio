@@ -9,6 +9,7 @@ import StyledComponentsRegistry from "../lib/registry";
 import CyberCursor from "../components/CyberCursor";
 import CyberAudio from "../components/CyberAudio";
 import KonamiCode from "../components/KonamiCode";
+import CyberLoader from "../components/CyberLoader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -50,6 +51,7 @@ export default function RootLayout({
       >
         <StyledComponentsRegistry>
           <ClientLayout>
+            <CyberLoader />
             <KonamiCode />
             <CyberAudio />
             <CyberCursor />
