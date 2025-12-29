@@ -36,13 +36,13 @@ const orbitron = Orbitron({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://kikiyulia.com'),
-  title: 'Yulia Rizki | Software Engineer',
-  description: 'Cyberpunk Portfolio of Yulia Rizki',
+  title: 'Kiki Yulia | Software Engineer',
+  description: 'Cyberpunk Portfolio of Kiki Yulia',
   openGraph: {
-    title: 'Yulia Rizki | Software Engineer',
-    description: 'Cyberpunk Portfolio of Yulia Rizki',
+    title: 'Kiki Yulia | Software Engineer',
+    description: 'Cyberpunk Portfolio of Kiki Yulia',
     url: 'https://kikiyulia.com',
-    siteName: 'Yulia Rizki Portfolio',
+    siteName: 'Kiki Yulia Portfolio',
     locale: 'en_US',
     type: 'website',
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
         url: '/meta_logo.png',
         width: 800,
         height: 600,
-        alt: 'Yulia Rizki Cyberpunk Portfolio',
+        alt: 'Kiki Yulia Cyberpunk Portfolio',
       },
     ],
   },
@@ -60,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Yulia Rizki | Software Engineer',
-    description: 'Cyberpunk Portfolio of Yulia Rizki',
+    title: 'Kiki Yulia | Software Engineer',
+    description: 'Cyberpunk Portfolio of Kiki Yulia',
     images: ['/meta_logo.png'], // Must be an absolute URL if metadataBase is not set, but we set it.
   },
 }

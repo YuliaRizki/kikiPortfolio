@@ -405,7 +405,7 @@ const PreviewMyCV = () => {
           <ControlBar>
             <div>
               <Title>
-                Yulia Rizki <span>{"//"} PROFILE</span>
+                Kiki Yulia <span>{"//"} PROFILE</span>
               </Title>
               <div
                 style={{
