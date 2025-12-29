@@ -47,18 +47,22 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/avatar_holo.jpg',
+        url: '/meta_logo.png',
         width: 800,
         height: 600,
         alt: 'Yulia Rizki Cyberpunk Portfolio',
       },
     ],
   },
+  icons: {
+    icon: '/meta_logo.png',
+    apple: '/meta_logo.png',
+  },
   twitter: {
     card: 'summary_large_image',
     title: 'Yulia Rizki | Software Engineer',
     description: 'Cyberpunk Portfolio of Yulia Rizki',
-    images: ['/avatar_holo.jpg'], // Must be an absolute URL if metadataBase is not set, but we set it.
+    images: ['/meta_logo.png'], // Must be an absolute URL if metadataBase is not set, but we set it.
   },
 }
 
