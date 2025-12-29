@@ -516,14 +516,6 @@ const projects = [
     mediaType: "image",
     thumbnails: ["/roomAI.jpg"],
   },
-  {
-    id: 4,
-    title: "HackGram",
-    description:
-      "Full-stack Instagram clone with story sharing, image filters, and realtime chat.",
-    tags: ["Social", "Fullstack", "Web"],
-    mediaType: "none",
-  },
 ];
 
 const MyProjects = () => {

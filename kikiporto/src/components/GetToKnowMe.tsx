@@ -1,18 +1,13 @@
-"use client";
+'use client'
 
-import React, { useRef, useState, useEffect } from "react";
-import styled from "styled-components";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import {
-  Points,
-  PointMaterial,
-  OrbitControls,
-  useTexture,
-} from "@react-three/drei";
-import * as THREE from "three";
-import * as random from "maath/random/dist/maath-random.esm";
-import { colors, animations, cyberGrid } from "../styles/shared";
+import React, { useRef, useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Points, PointMaterial, OrbitControls, useTexture } from '@react-three/drei'
+import * as THREE from 'three'
+import * as random from 'maath/random/dist/maath-random.esm'
+import { colors, animations, cyberGrid } from '../styles/shared'
 
 // --- Styled Components ---
 
@@ -30,7 +25,7 @@ const Section = styled.section`
   /* Grid Background */
   /* Grid removed */
   /* ${cyberGrid} */
-`;
+`
 
 const ContentWrapper = styled(motion.div)`
   display: flex;
@@ -46,12 +41,12 @@ const ContentWrapper = styled(motion.div)`
     flex-direction: column-reverse;
     gap: 3rem;
   }
-`;
+`
 
 const TextContainer = styled.div`
   flex: 1;
   font-family: var(--font-share-tech-mono), monospace;
-`;
+`
 
 const GlitchHeader = styled.h2`
   font-family: var(--font-orbitron), sans-serif;
@@ -63,7 +58,7 @@ const GlitchHeader = styled.h2`
   text-shadow: 2px 2px 0px ${colors.neonPurple};
 
   &::before {
-    content: "IDENTITY_VERIFIED";
+    content: 'IDENTITY_VERIFIED';
     position: absolute;
     top: -20px;
     left: 0;
@@ -76,7 +71,7 @@ const GlitchHeader = styled.h2`
   @media (max-width: 768px) {
     font-size: 2rem;
   }
-`;
+`
 
 const TerminalText = styled.p`
   font-size: 1.1rem;
@@ -85,32 +80,28 @@ const TerminalText = styled.p`
   margin-bottom: 2rem;
   border-left: 2px solid ${colors.neonCyan};
   padding-left: 1rem;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 243, 255, 0.05) 0%,
-    transparent 100%
-  );
-`;
+  background: linear-gradient(90deg, rgba(0, 243, 255, 0.05) 0%, transparent 100%);
+`
 
 const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   margin-top: 2rem;
-`;
+`
 
 const StatItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-`;
+`
 
 const StatLabel = styled.span`
   color: ${colors.neonCyan};
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-`;
+`
 
 const ProgressBar = styled.div<{ width: string }>`
   width: 100%;
@@ -120,17 +111,17 @@ const ProgressBar = styled.div<{ width: string }>`
   overflow: hidden;
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
-    width: ${(props) => props.width || "0%"};
+    width: ${(props) => props.width || '0%'};
     background: ${colors.neonPurple};
     box-shadow: 0 0 10px ${colors.neonPurple};
     animation: ${animations.slideIn} 1.5s ease-out forwards;
   }
-`;
+`
 
 const AvatarContainer = styled.div`
   flex: 1;
@@ -145,33 +136,29 @@ const AvatarContainer = styled.div`
 
   /* Hologram Effect Container */
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
     width: 60%;
     height: 20px;
-    background: radial-gradient(
-      ellipse at center,
-      rgba(0, 255, 159, 0.4) 0%,
-      transparent 70%
-    );
+    background: radial-gradient(ellipse at center, rgba(0, 255, 159, 0.4) 0%, transparent 70%);
     filter: blur(5px);
   }
-`;
+`
 
 // --- 3D Particle Cloud Component ---
 function ParticleCloud() {
-  const ref = useRef<any>();
-  const sphere = random.inSphere(new Float32Array(5000), { radius: 1.5 });
+  const ref = useRef<any>()
+  const sphere = random.inSphere(new Float32Array(5000), { radius: 1.5 })
 
   useFrame((state, delta) => {
     if (ref.current) {
-      ref.current.rotation.x -= delta / 10;
-      ref.current.rotation.y -= delta / 15;
+      ref.current.rotation.x -= delta / 10
+      ref.current.rotation.y -= delta / 15
     }
-  });
+  })
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
@@ -186,21 +173,21 @@ function ParticleCloud() {
         />
       </Points>
     </group>
-  );
+  )
 }
 
 // --- Holo Relief Cat (3D Extruded) ---
 function HoloReliefCat({ url }: { url: string }) {
-  const texture = useTexture(url);
-  const meshRef = useRef<any>(null!);
+  const texture = useTexture(url)
+  const meshRef = useRef<any>(null!)
 
   useFrame((state) => {
     if (meshRef.current) {
-      const t = state.clock.getElapsedTime();
-      meshRef.current.rotation.y = Math.sin(t * 0.5) * 0.05; // Very subtle rotation
-      meshRef.current.position.y = Math.sin(t * 1.5) * 0.1; // Float
+      const t = state.clock.getElapsedTime()
+      meshRef.current.rotation.y = Math.sin(t * 0.5) * 0.05 // Very subtle rotation
+      meshRef.current.position.y = Math.sin(t * 1.5) * 0.1 // Float
     }
-  });
+  })
 
   return (
     <group scale={2.5}>
@@ -223,7 +210,7 @@ function HoloReliefCat({ url }: { url: string }) {
         />
       </mesh>
     </group>
-  );
+  )
 }
 
 // --- Scramble Text Component ---
@@ -232,65 +219,65 @@ const ScrambleText = ({
   speed = 50,
   delay = 0,
   reveal = false, // If true, reveal immediately
-  hoverResult = "", // If set, text changes to this on hover
+  hoverResult = '', // If set, text changes to this on hover
   className,
 }: {
-  text: string;
-  speed?: number;
-  delay?: number;
-  reveal?: boolean;
-  hoverResult?: string;
-  className?: string;
+  text: string
+  speed?: number
+  delay?: number
+  reveal?: boolean
+  hoverResult?: string
+  className?: string
 }) => {
-  const [display, setDisplay] = React.useState(text);
-  const [isHovering, setIsHovering] = React.useState(false);
-  const chars = "!<>-_\\/[]{}—=+*^?#________";
+  const [display, setDisplay] = React.useState(text)
+  const [isHovering, setIsHovering] = React.useState(false)
+  const chars = '!<>-_\\/[]{}—=+*^?#________'
 
   React.useEffect(() => {
-    let interval: any;
-    let timer: any;
+    let interval: any
+    let timer: any
 
     // Target text depends on hover state
-    const target = isHovering && hoverResult ? hoverResult : text;
+    const target = isHovering && hoverResult ? hoverResult : text
 
     const startScramble = () => {
-      let iteration = 0;
-      clearInterval(interval);
+      let iteration = 0
+      clearInterval(interval)
 
       interval = setInterval(() => {
         setDisplay(
           target
-            .split("")
+            .split('')
             .map((char, index) => {
               if (index < iteration) {
-                return target[index];
+                return target[index]
               }
-              return chars[Math.floor(Math.random() * chars.length)];
+              return chars[Math.floor(Math.random() * chars.length)]
             })
-            .join("")
-        );
+            .join(''),
+        )
 
         if (iteration >= target.length) {
-          clearInterval(interval);
+          clearInterval(interval)
         }
 
-        iteration += 1 / 3;
-      }, 30);
-    };
+        iteration += 1 / 3
+      }, 30)
+    }
 
     if (reveal || isHovering) {
-      timer = setTimeout(startScramble, delay);
+      timer = setTimeout(startScramble, delay)
     } else {
       // If not revealing, just show static (or could be scrambled initial state)
       // For this usage, we assume we want to show it eventually or on hover
-      setDisplay(target);
+      setDisplay(target)
     }
 
     return () => {
-      clearInterval(interval);
-      clearTimeout(timer);
-    };
-  }, [reveal, isHovering, hoverResult, text, delay]);
+      clearInterval(interval)
+      clearTimeout(timer)
+    }
+  }, [reveal, isHovering, hoverResult, text, delay])
 
   return (
     <span
@@ -300,8 +287,8 @@ const ScrambleText = ({
     >
       {display}
     </span>
-  );
-};
+  )
+}
 
 // --- New Styled Components for Fun Section ---
 const FunFactBox = styled(motion.div)`
@@ -314,7 +301,7 @@ const FunFactBox = styled(motion.div)`
   overflow: hidden;
 
   &::before {
-    content: "CLASSIFIED_INFO // HOVER_TO_DECRYPT";
+    content: 'CLASSIFIED_INFO // HOVER_TO_DECRYPT';
     position: absolute;
     top: 5px;
     right: 5px;
@@ -328,7 +315,7 @@ const FunFactBox = styled(motion.div)`
     border-style: solid;
     box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
   }
-`;
+`
 
 const FunFactTitle = styled.h4`
   color: ${colors.neonGreen};
@@ -337,7 +324,7 @@ const FunFactTitle = styled.h4`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-`;
+`
 
 const GetToKnowMe = () => {
   return (
@@ -345,7 +332,7 @@ const GetToKnowMe = () => {
       <ContentWrapper
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.8 }}
       >
         <TextContainer>
@@ -355,17 +342,15 @@ const GetToKnowMe = () => {
 
           <TerminalText>
             <ScrambleText
-              text="Initializing bio-data scan... Subject identified as Yulia Rizki."
+              text="Initializing bio-data scan... Subject identified Kiki."
               reveal
               delay={500}
             />
             <br />
             <br />
             <span style={{ opacity: 0.9 }}>
-              Experienced Frontend Engineer specialized in building immersive
-              web interfaces. Currently upgrading neural pathways with Next.js,
-              Three.js, and GenAI technologies. My mission is to bridge the gap
-              between human intent and digital execution.
+              Software Developer crafting modern web experiences with a product-first mindset.
+              Working primarily with Next.js to turn ideas into functional, user-focused applications.
             </span>
           </TerminalText>
 
@@ -387,15 +372,13 @@ const GetToKnowMe = () => {
             transition={{ delay: 0.5 }}
           >
             <FunFactTitle>
-              <span style={{ fontSize: "1.2rem" }}>⚡</span>
+              <span style={{ fontSize: '1.2rem' }}>⚡</span>
               BONUS_DATA_PACK
             </FunFactTitle>
-            <div
-              style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}
-            >
+            <div style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
               <ScrambleText
                 text="Encrypting data... Hover to view."
-                hoverResult="Fun Fact: My body is consists of Half Coffee and Half Code LoL."
+                hoverResult="Fun Fact: Powered by coffee, driven by curiosity."
                 reveal={false}
               />
             </div>
@@ -421,22 +404,22 @@ const GetToKnowMe = () => {
           {/* Absolute positioned overlay text or decorative elements can go here */}
           <div
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              color: "rgba(0, 255, 159, 0.5)",
-              fontFamily: "var(--font-orbitron)",
-              fontSize: "4rem",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              color: 'rgba(0, 255, 159, 0.5)',
+              fontFamily: 'var(--font-orbitron)',
+              fontSize: '4rem',
               opacity: 0.1,
-              pointerEvents: "none",
+              pointerEvents: 'none',
               zIndex: -1,
             }}
           ></div>
         </AvatarContainer>
       </ContentWrapper>
     </Section>
-  );
-};
+  )
+}
 
-export default GetToKnowMe;
+export default GetToKnowMe
