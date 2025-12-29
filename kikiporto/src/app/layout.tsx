@@ -45,6 +45,20 @@ export const metadata: Metadata = {
     siteName: 'Yulia Rizki Portfolio',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/avatar_holo.jpg',
+        width: 800,
+        height: 600,
+        alt: 'Yulia Rizki Cyberpunk Portfolio',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Yulia Rizki | Software Engineer',
+    description: 'Cyberpunk Portfolio of Yulia Rizki',
+    images: ['/avatar_holo.jpg'], // Must be an absolute URL if metadataBase is not set, but we set it.
   },
 }
 

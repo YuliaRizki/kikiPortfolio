@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import React, { useEffect, useRef, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { colors } from "../styles/shared";
-import CyberEarth from "./CyberEarth";
-import { GodModeHUD } from "./GodModeHUD";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef, useState } from 'react'
+import styled, { keyframes } from 'styled-components'
+import { colors } from '../styles/shared'
+import CyberEarth from './CyberEarth'
+import { GodModeHUD } from './GodModeHUD'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const glitchAnim = keyframes`
   0% { transform: translate(0); }
@@ -14,7 +14,7 @@ const glitchAnim = keyframes`
   60% { transform: translate(2px, 2px); }
   80% { transform: translate(2px, -2px); }
   100% { transform: translate(0); }
-`;
+`
 
 const MessageOverlay = styled.div`
   position: fixed;
@@ -39,16 +39,16 @@ const MessageOverlay = styled.div`
 
   /* Hard vignette */
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     background: radial-gradient(circle, transparent 40%, #000 100%);
     pointer-events: none;
   }
-`;
+`
 
 const BrutalTitle = styled.h1`
-  font-family: "Impact", "Anton", sans-serif;
+  font-family: 'Impact', 'Anton', sans-serif;
   text-transform: uppercase;
   font-size: clamp(4rem, 15vw, 12rem);
   line-height: 0.85;
@@ -65,7 +65,7 @@ const BrutalTitle = styled.h1`
   mix-blend-mode: normal;
 
   &::before {
-    content: "WARNING // UNRESTRICTED ACCESS";
+    content: 'WARNING // UNRESTRICTED ACCESS';
     position: absolute;
     top: -2rem;
     left: 0;
@@ -82,11 +82,11 @@ const BrutalTitle = styled.h1`
     padding: 1rem 2rem;
     box-shadow: 10px 10px 0px #00f3ff;
   }
-`;
+`
 
 const BrutalSub = styled.div`
   margin-top: 4rem;
-  font-family: "Courier New", monospace;
+  font-family: 'Courier New', monospace;
   font-weight: 900;
   font-size: clamp(1.5rem, 4vw, 3rem);
   color: #ff0055;
@@ -100,7 +100,7 @@ const BrutalSub = styled.div`
   /* Decorative crosshairs */
   &::before,
   &::after {
-    content: "+";
+    content: '+';
     position: absolute;
     color: #00f3ff;
     font-size: 2rem;
@@ -113,7 +113,7 @@ const BrutalSub = styled.div`
     bottom: -1.5rem;
     right: -1.5rem;
   }
-`;
+`
 
 const FilterOverlay = styled.div`
   position: fixed;
@@ -125,7 +125,7 @@ const FilterOverlay = styled.div`
   pointer-events: none;
   backdrop-filter: contrast(1.2) saturate(1.2);
   mix-blend-mode: overlay;
-`;
+`
 
 const MatrixCanvas = styled.canvas`
   position: fixed;
@@ -137,7 +137,7 @@ const MatrixCanvas = styled.canvas`
   pointer-events: none;
   opacity: 0.6;
   filter: hue-rotate(-110deg) brightness(1.5);
-`;
+`
 
 const Ripple = styled(motion.div)`
   position: fixed;
@@ -148,202 +148,194 @@ const Ripple = styled(motion.div)`
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
-`;
+`
 
 const MatrixRain = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
 
     const katakana =
-      "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン";
-    const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const nums = "0123456789";
-    const alphabet = katakana + latin + nums;
+      'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン'
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const nums = '0123456789'
+    const alphabet = katakana + latin + nums
 
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
+    const fontSize = 16
+    const columns = canvas.width / fontSize
 
-    const rainDrops: number[] = [];
+    const rainDrops: number[] = []
     for (let x = 0; x < columns; x++) {
-      rainDrops[x] = 1;
+      rainDrops[x] = 1
     }
 
     const draw = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
+      ctx.fillStyle = '#0F0'
+      ctx.font = fontSize + 'px monospace'
 
       for (let i = 0; i < rainDrops.length; i++) {
-        const text = alphabet.charAt(
-          Math.floor(Math.random() * alphabet.length)
-        );
-        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length))
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize)
 
         if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          rainDrops[i] = 0;
+          rainDrops[i] = 0
         }
-        rainDrops[i]++;
+        rainDrops[i]++
       }
-    };
+    }
 
-    const interval = setInterval(draw, 30);
+    const interval = setInterval(draw, 30)
 
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    window.addEventListener("resize", handleResize);
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    window.addEventListener('resize', handleResize)
 
     return () => {
-      clearInterval(interval);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      clearInterval(interval)
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
-  return <MatrixCanvas ref={canvasRef} />;
-};
+  return <MatrixCanvas ref={canvasRef} />
+}
 
 const KonamiCode = () => {
-  const [input, setInput] = useState<string[]>([]);
-  const [godMode, setGodMode] = useState(false);
-  const [showMsg, setShowMsg] = useState(false);
-  const [tapCount, setTapCount] = useState(0);
-  const [ripples, setRipples] = useState<
-    { x: number; y: number; id: number }[]
-  >([]);
+  const [input, setInput] = useState<string[]>([])
+  const [godMode, setGodMode] = useState(false)
+  const [showMsg, setShowMsg] = useState(false)
+  const [tapCount, setTapCount] = useState(0)
+  const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([])
 
   // Konami Code Sequence: Up, Up, Down, Down, Left, Right, Left, Right, B, A
   const sequence = [
-    "ArrowUp",
-    "ArrowUp",
-    "ArrowDown",
-    "ArrowDown",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowLeft",
-    "ArrowRight",
-    "KeyB",
-    "KeyA",
-  ];
+    'ArrowUp',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'ArrowLeft',
+    'ArrowRight',
+    'KeyB',
+    'KeyA',
+  ]
 
   const playSound = () => {
-    const AudioContext =
-      window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext
     if (AudioContext) {
-      const ctx = new AudioContext();
+      const ctx = new AudioContext()
 
       // Arpeggio
-      [0, 0.1, 0.2, 0.3].forEach((delay, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = i % 2 === 0 ? "square" : "sawtooth";
-        osc.frequency.value = 440 * Math.pow(2, (i / 12) * 7);
+      ;[0, 0.1, 0.2, 0.3].forEach((delay, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = i % 2 === 0 ? 'square' : 'sawtooth'
+        osc.frequency.value = 440 * Math.pow(2, (i / 12) * 7)
 
-        gain.gain.setValueAtTime(0.1, ctx.currentTime + delay);
-        gain.gain.exponentialRampToValueAtTime(
-          0.001,
-          ctx.currentTime + delay + 0.5
-        );
+        gain.gain.setValueAtTime(0.1, ctx.currentTime + delay)
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.5)
 
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime + delay);
-        osc.stop(ctx.currentTime + delay + 0.5);
-      });
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(ctx.currentTime + delay)
+        osc.stop(ctx.currentTime + delay + 0.5)
+      })
     }
-  };
+  }
 
   const activateGodMode = () => {
     if (godMode) {
-      setGodMode(false);
-      setShowMsg(false);
+      setGodMode(false)
+      setShowMsg(false)
     } else {
-      playSound();
-      setGodMode(true);
-      setShowMsg(true);
-      setTimeout(() => setShowMsg(false), 3000);
+      playSound()
+      setGodMode(true)
+      setShowMsg(true)
+      setTimeout(() => setShowMsg(false), 3000)
     }
-  };
+  }
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const newKey = e.code;
+      const newKey = e.code
 
       setInput((prev) => {
-        const updated = [...prev, newKey];
-        if (updated.length > sequence.length) updated.shift();
+        const updated = [...prev, newKey]
+        if (updated.length > sequence.length) updated.shift()
 
         if (JSON.stringify(updated) === JSON.stringify(sequence)) {
-          activateGodMode();
-          return [];
+          activateGodMode()
+          return []
         }
-        return updated;
-      });
-    };
+        return updated
+      })
+    }
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [godMode]);
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [godMode])
 
   useEffect(() => {
-    const timer = setTimeout(() => setTapCount(0), 300);
-    return () => clearTimeout(timer);
-  }, [tapCount]);
+    const timer = setTimeout(() => setTapCount(0), 300)
+    return () => clearTimeout(timer)
+  }, [tapCount])
 
   const addRipple = (x: number, y: number) => {
-    const id = Date.now();
-    setRipples((prev) => [...prev, { x, y, id }]);
+    const id = Date.now()
+    setRipples((prev) => [...prev, { x, y, id }])
     setTimeout(() => {
-      setRipples((prev) => prev.filter((r) => r.id !== id));
-    }, 1000);
-  };
+      setRipples((prev) => prev.filter((r) => r.id !== id))
+    }, 1000)
+  }
 
   useEffect(() => {
     const handleTap = (e: MouseEvent) => {
       if (
-        (e.target as HTMLElement).tagName === "BUTTON" ||
-        (e.target as HTMLElement).tagName === "A"
+        (e.target as HTMLElement).tagName === 'BUTTON' ||
+        (e.target as HTMLElement).tagName === 'A'
       ) {
-        return;
+        return
       }
 
-      addRipple(e.clientX, e.clientY);
+      addRipple(e.clientX, e.clientY)
 
       setTapCount((prev) => {
-        const newCount = prev + 1;
+        const newCount = prev + 1
         if (newCount === 2) {
-          activateGodMode();
-          return 0;
+          activateGodMode()
+          return 0
         }
-        return newCount;
-      });
-    };
+        return newCount
+      })
+    }
 
-    window.addEventListener("click", handleTap as any);
+    window.addEventListener('click', handleTap as any)
 
     return () => {
-      window.removeEventListener("click", handleTap as any);
-    };
-  }, [godMode]);
+      window.removeEventListener('click', handleTap as any)
+    }
+  }, [godMode])
 
   // God Mode Class Injector
   useEffect(() => {
     if (godMode) {
-      document.body.classList.add("god-mode");
+      document.body.classList.add('god-mode')
     } else {
-      document.body.classList.remove("god-mode");
+      document.body.classList.remove('god-mode')
     }
-  }, [godMode]);
+  }, [godMode])
 
   return (
     <>
@@ -357,7 +349,7 @@ const KonamiCode = () => {
               scale: 0.5,
               left: r.x,
               top: r.y,
-              borderColor: "#ff0055",
+              borderColor: '#ff0055',
             }}
             animate={{ opacity: 0, scale: 2 }}
             exit={{ opacity: 0 }}
@@ -375,6 +367,16 @@ const KonamiCode = () => {
         </>
       )}
 
+      {!godMode && (
+        <GodModeHint
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 0.6, x: 0 }}
+          transition={{ delay: 2, duration: 1 }}
+        >
+          <span className="blink">_</span>SYSTEM_HINT: DOUBLE_TAP::GOD_MODE
+        </GodModeHint>
+      )}
+
       {showMsg && (
         <MessageOverlay>
           <BrutalTitle>GOD MODE</BrutalTitle>
@@ -382,7 +384,48 @@ const KonamiCode = () => {
         </MessageOverlay>
       )}
     </>
-  );
-};
+  )
+}
 
-export default KonamiCode;
+const GodModeHint = styled(motion.div)`
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 99;
+  font-family: var(--font-share-tech-mono);
+  font-size: 0.75rem;
+  color: ${colors.neonPurple};
+  letter-spacing: 2px;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 5px 10px;
+  border: 1px solid ${colors.neonPurple};
+  border-left: 3px solid ${colors.neonPurple};
+  backdrop-filter: blur(4px);
+
+  .blink {
+    animation: blink 1s infinite;
+    color: ${colors.neonCyan};
+    margin-right: 5px;
+    font-weight: bold;
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    bottom: 90px;
+    left: 10px;
+    font-size: 0.6rem;
+    background: rgba(0, 0, 0, 0.8);
+  }
+`
+
+export default KonamiCode
